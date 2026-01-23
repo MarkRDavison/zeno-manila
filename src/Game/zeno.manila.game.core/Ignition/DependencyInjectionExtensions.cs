@@ -10,7 +10,7 @@ public static class DependencyInjectionExtensions
             .AddScoped<ManilaGame>()
             .AddScoped<ManilaGameRenderer>()
             .AddScoped<ManilaGameData>()
-            .RegisterScene<FarmGameScene>();
+            .RegisterScene<ManilaGameScene>();
 
         return services;
     }

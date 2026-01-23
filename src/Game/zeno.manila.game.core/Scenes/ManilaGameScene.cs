@@ -1,12 +1,12 @@
 ﻿namespace zeno.manila.game.core.Scenes;
 
-public sealed class FarmGameScene : IScene
+public sealed class ManilaGameScene : IScene
 {
     private ManilaGameCamera _camera;
     private readonly ManilaGame _game;
     private readonly ManilaGameRenderer _gameRenderer;
 
-    public FarmGameScene(
+    public ManilaGameScene(
         ManilaGameCamera camera,
         ManilaGame game,
         ManilaGameRenderer gameRenderer)

@@ -11,7 +11,7 @@
         .ConfigureServices(services =>
         {
             services
-                .AddHostedService<Worker<FarmGameScene>>()
+                .AddHostedService<Worker<ManilaGameScene>>()
                 .AddEngine()
                 .AddManilaCore();
         })
