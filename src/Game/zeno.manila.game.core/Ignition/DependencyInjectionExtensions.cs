@@ -5,11 +5,15 @@ public static class DependencyInjectionExtensions
     public static IServiceCollection AddManilaCore(this IServiceCollection services)
     {
         services
-            .AddTransient<RenderSystem>()
+            .AddTransient<RenderSystem>();
+
+        services
             .AddScoped<ManilaGameCamera>()
             .AddScoped<ManilaGame>()
             .AddScoped<ManilaGameRenderer>()
-            .AddScoped<ManilaGameData>()
+            .AddScoped<ManilaGameData>();
+
+        services
             .RegisterScene<ManilaGameScene>();
 
         return services;

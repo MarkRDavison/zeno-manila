@@ -12,9 +12,9 @@ public sealed class ManilaGame
 
     public void Update(float delta)
     {
-        for (int i = 0; i < _systems.Count; i++)
+        foreach (var s in _systems)
         {
-            _systems[i].Update(_world, delta);
+            s.Update(_world, delta);
         }
     }
 }
