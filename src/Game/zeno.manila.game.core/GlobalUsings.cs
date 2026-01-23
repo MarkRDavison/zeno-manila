@@ -1,0 +1,9 @@
+﻿global using Microsoft.Extensions.DependencyInjection;
+global using Raylib_cs;
+global using System.Numerics;
+global using zeno.manila.game.core.Infrastructure;
+global using zeno.manila.game.core.Scenes;
+global using zeno.manila.game.ECS;
+global using zeno.manila.game.ECS.Systems;
+global using zeno.manilla.engine.Core;
+global using zeno.manilla.engine.Ignition;

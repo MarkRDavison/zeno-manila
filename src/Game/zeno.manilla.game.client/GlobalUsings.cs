@@ -1,0 +1,10 @@
+﻿global using Microsoft.Extensions.DependencyInjection;
+global using Microsoft.Extensions.Hosting;
+global using Microsoft.Extensions.Logging;
+global using zeno.manila.game.core.Ignition;
+global using zeno.manila.game.core.Infrastructure;
+global using zeno.manila.game.core.Scenes;
+global using zeno.manilla.engine.Core;
+global using zeno.manilla.engine.Ignition;
+global using zeno.manilla.engine.Resources;
+global using zeno.manilla.game.client;

@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/Core/">
+    <Project Path="Core/zeno.manila.game/zeno.manila.game.csproj" Id="ec939bc5-e221-4b4a-9895-ad2e47b0c956" />
+    <Project Path="Core/zeno.manilla.engine/zeno.manilla.engine.csproj" Id="1a062c8d-461d-408c-8a27-a77d4fbb88ef" />
+  </Folder>
+  <Folder Name="/Game/">
+    <Project Path="Game/zeno.manila.game.core/zeno.manila.game.core.csproj" Id="6c83f4a0-1320-444d-b900-32090b4a9bf9" />
+    <Project Path="Game/zeno.manilla.game.client/zeno.manilla.game.client.csproj" Id="52fda020-64fc-443d-89d1-54c282d75332" />
+  </Folder>
+</Solution>

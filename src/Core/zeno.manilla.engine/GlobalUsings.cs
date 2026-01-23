@@ -1,0 +1,11 @@
+﻿global using Microsoft.Extensions.DependencyInjection;
+global using Raylib_cs;
+global using System.Diagnostics;
+global using System.Numerics;
+global using System.Security.Cryptography;
+global using System.Text.Json;
+global using System.Text.Json.Serialization;
+global using System.Xml.Linq;
+global using zeno.manilla.engine.Core;
+global using zeno.manilla.engine.Resources;
+global using zeno.manilla.engine.Resources.Data;
