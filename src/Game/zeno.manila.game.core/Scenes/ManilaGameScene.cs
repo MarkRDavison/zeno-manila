@@ -21,15 +21,17 @@ public sealed class ManilaGameScene : IScene
         _camera.Zoom = 1.0f;
         _camera.Offset = new Vector2(
             Raylib.GetScreenWidth() / 2,
-            Raylib.GetScreenHeight() / 2)
-            - new Vector2(8, 4) * ManilaConstants.TileSize;
+            Raylib.GetScreenHeight() / 2);
+        _camera.Target = new Vector2(12 * 64, 6 * 64);
     }
 
     public void Update(float delta)
     {
+        _camera.Update(delta);
         _game.Update(delta);
         _gameRenderer.Update(delta);
     }
+
 
     public void Draw()
     {
