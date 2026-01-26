@@ -1,0 +1,7 @@
+﻿namespace zeno.manila.game.core.Services.Contracts;
+
+public interface ITurnService
+{
+    int GetCurrentTeamTurn();
+    void EndCurrentTurn();
+}

@@ -13,22 +13,18 @@ public sealed class ManilaGameCamera
 
     public void Update(float delta)
     {
-
-        if (!_panning)
+        var wheelDelta = Raylib.GetMouseWheelMove();
+        if (wheelDelta is not 0)
         {
-            var wheelDelta = Raylib.GetMouseWheelMove();
-            if (wheelDelta is not 0)
-            {
-                var mouseScreen = Raylib.GetMousePosition();
-                var mouseWorldBefore = Raylib.GetScreenToWorld2D(mouseScreen, Camera);
+            var mouseScreen = Raylib.GetMousePosition();
+            var mouseWorldBefore = Raylib.GetScreenToWorld2D(mouseScreen, Camera);
 
-                float scale = 0.2f * wheelDelta;
-                Zoom = (float)Math.Clamp(Math.Exp(Math.Log(Zoom) + scale), 0.125f, 64.0f);
+            float scale = 0.2f * wheelDelta;
+            Zoom = (float)Math.Clamp(Math.Exp(Math.Log(Zoom) + scale), 0.0125f, 4.0f);
 
-                Vector2 mouseWorldAfter = Raylib.GetScreenToWorld2D(mouseScreen, Camera);
+            Vector2 mouseWorldAfter = Raylib.GetScreenToWorld2D(mouseScreen, Camera);
 
-                Target += mouseWorldBefore - mouseWorldAfter;
-            }
+            Target += mouseWorldBefore - mouseWorldAfter;
         }
 
         if (Raylib.IsMouseButtonPressed(MouseButton.Right))
@@ -41,7 +37,7 @@ public sealed class ManilaGameCamera
 
             if (mouseDelta.LengthSquared() > 0)
             {
-                Offset += mouseDelta;
+                Target -= mouseDelta / Zoom;
             }
         }
         if (Raylib.IsMouseButtonReleased(MouseButton.Right))

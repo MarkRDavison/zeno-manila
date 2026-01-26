@@ -24,14 +24,13 @@ public class Application
         //var height = Raylib.GetMonitorHeight(monitor);
 
         //Raylib.SetWindowSize(width, height);
-
-        Raylib.SetConfigFlags(ConfigFlags.VSyncHint);
         Raylib.SetExitKey(0);
+        Raylib.SetExitKey(KeyboardKey.Null);
+        Raylib.SetConfigFlags(ConfigFlags.VSyncHint);
+        Raylib.SetConfigFlags(ConfigFlags.ResizableWindow);
         Raylib.InitWindow(1440, 900, title);
         Raylib.InitAudioDevice();
         Raylib.SetWindowIcon(Raylib.LoadImage("Assets/Textures/icon.png"));
-
-        // ComponentBase.Services = _serviceProvider;
 
         await Task.CompletedTask;
     }

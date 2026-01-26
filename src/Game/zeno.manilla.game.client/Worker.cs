@@ -46,8 +46,6 @@ public class Worker<TStartScene> : BackgroundService
 
         var data = scope.ServiceProvider.GetRequiredService<ManilaGameData>();
 
-        Raylib_cs.Raylib.SetExitKey(Raylib_cs.KeyboardKey.Null);
-
         // TODO: Config
         scope.ServiceProvider
             .GetRequiredService<ISceneService>()
