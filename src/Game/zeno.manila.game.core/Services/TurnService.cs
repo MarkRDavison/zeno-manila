@@ -2,27 +2,29 @@
 
 internal sealed class TurnService : ITurnService
 {
-    private int _currentTurn;
+    private int _currentTeamTurn;
     private readonly ITeamService _teamService;
+    private readonly ManilaGameData _data;
 
-    public TurnService(ITeamService teamService)
+    public TurnService(ITeamService teamService, ManilaGameData data)
     {
         _teamService = teamService;
+        _data = data;
     }
 
-    public int GetCurrentTeamTurn() => _currentTurn + 1;
+    public int GetCurrentTeamTurn() => _currentTeamTurn + 1;
 
     public void EndCurrentTurn()
     {
-        _currentTurn = _currentTurn + 1;
+        _currentTeamTurn++;
 
-        if (_currentTurn >= _teamService.NumberOfTeams)
+        if (_currentTeamTurn >= _teamService.NumberOfTeams)
         {
-            _currentTurn %= _teamService.NumberOfTeams;
-            CurrentTurnNumber++;
+            _currentTeamTurn %= _teamService.NumberOfTeams;
+            _data.CurrentTurnNumber++;
         }
     }
 
     public bool IsEndTurnProcessing { get; private set; }
-    public int CurrentTurnNumber { get; private set; }
+    public int CurrentTurnNumber => _data.CurrentTurnNumber;
 }

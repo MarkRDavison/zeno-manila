@@ -1,8 +1,11 @@
-﻿namespace zeno.manila.game.core.Infrastructure;
+﻿using zeno.manila.game.core.Systems;
+
+namespace zeno.manila.game.core.Infrastructure;
 
 public sealed class ManilaGame
 {
     private readonly ManilaGameData _data;
+    private readonly List<WorldSystem> _systems = [];
 
     public ManilaGame(ManilaGameData data)
     {
@@ -66,15 +69,15 @@ public sealed class ManilaGame
                         TeamNumber = owningTeam,
                         Population = 10_000
                     });
-
-                    entity.Get<CityComponent>().RootCityEntityId = entity.Id;
                 }
             }
         }
+
+        _systems.Add(new CityPopulationSystem(_data));
     }
 
     public void Update(float delta)
     {
-
+        _systems.ForEach(_ => _.Update(_data.World, delta));
     }
 }

@@ -8,4 +8,5 @@ public sealed class ManilaGameData
     public List<List<WorldTile>> Tiles { get; set; } = [];
 
     public World World { get; set; } = new();
+    public int CurrentTurnNumber { get; set; }
 }
