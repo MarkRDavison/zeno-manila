@@ -23,6 +23,8 @@
 
 ## Gameplay loop
 
+[User Interface](UserInterface.md)
+
 - Turn based
 - Review messages from opponents previous turn
 - Review/modify science/research

@@ -14,6 +14,15 @@ internal sealed class TurnService : ITurnService
 
     public void EndCurrentTurn()
     {
-        _currentTurn = (_currentTurn + 1) % _teamService.NumberOfTeams;
+        _currentTurn = _currentTurn + 1;
+
+        if (_currentTurn >= _teamService.NumberOfTeams)
+        {
+            _currentTurn %= _teamService.NumberOfTeams;
+            CurrentTurnNumber++;
+        }
     }
+
+    public bool IsEndTurnProcessing { get; private set; }
+    public int CurrentTurnNumber { get; private set; }
 }

@@ -31,6 +31,7 @@ internal sealed class TeamService : ITeamService
     public string GetTeamName(int teamNumber) => _teams[teamNumber - 1].Name;
 
     public Color GetTeamColor(int teamNumber) => _teams[teamNumber - 1].Color;
+
     public int GetResourceAmount(int teamNumber, string resource)
     {
         var resources = _teams[teamNumber - 1].Resources;

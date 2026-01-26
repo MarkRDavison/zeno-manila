@@ -36,22 +36,24 @@ public sealed class ManilaGameRenderer
             {
                 var tile = _gameData.Tiles[y][x];
 
-                Raylib.DrawRectangle(
-                    x * TileSize,
-                    y * TileSize,
-                    TileSize,
-                    TileSize,
-                    tile.Color);
-
-                if (tile.OwningTeam is not 0)
+                if (tile.OwningTeam is 0)
+                {
+                    Raylib.DrawRectangle(
+                        x * TileSize,
+                        y * TileSize,
+                        TileSize,
+                        TileSize,
+                        tile.Color);
+                }
+                else
                 {
                     var teamColor = _teamService.GetTeamColor(tile.OwningTeam);
 
                     Raylib.DrawRectangle(
-                        x * TileSize + 4,
-                        y * TileSize + 4,
-                        TileSize - 8,
-                        TileSize - 8,
+                        x * TileSize,
+                        y * TileSize,
+                        TileSize,
+                        TileSize,
                         teamColor);
                 }
             }
@@ -77,11 +79,13 @@ public sealed class ManilaGameRenderer
 
         int yInfoOffset = 32;
 
+        Raylib.DrawText(string.Format("Turn: {0:0}", _turnService.CurrentTurnNumber), 10, yInfoOffset, 32, Color.Black);
+        yInfoOffset += 32;
         Raylib.DrawText(string.Format("Camera: {0:0},{1:0}", camera.Target.X, camera.Target.Y), 10, yInfoOffset, 32, Color.Black);
         yInfoOffset += 32;
-        Raylib.DrawText(string.Format("Mouse : {0:0},{1:0}", mouse.X, mouse.Y), 10, yInfoOffset, 32, Color.Black);
+        Raylib.DrawText(string.Format("Mouse: {0:0},{1:0}", mouse.X, mouse.Y), 10, yInfoOffset, 32, Color.Black);
         yInfoOffset += 32;
-        Raylib.DrawText(string.Format("World : {0:0},{1:0}", world.X, world.Y), 10, yInfoOffset, 32, Color.Black);
+        Raylib.DrawText(string.Format("World: {0:0},{1:0}", world.X, world.Y), 10, yInfoOffset, 32, Color.Black);
         yInfoOffset += 32;
 
         if (_userInteractionService.ActiveTile is { } activeTile2)
@@ -117,7 +121,7 @@ public sealed class ManilaGameRenderer
         Raylib.DrawText(text, xPos, yPos, 64, _teamService.GetTeamColor(currentTeam));
 
         {   //  Resources
-            yInfoOffset = screenHeight - 10 - 32;
+            yInfoOffset = screenHeight - 8 - 32;
 
             var credits = _teamService.GetResourceAmount(currentTeam, "Credits");
 
