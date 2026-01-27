@@ -52,7 +52,7 @@ public sealed class ManilaGameScene : IScene
     public void Update(float delta)
     {
         _camera.Update(delta);
-        _gameUserInteractionService.TrySelectAtCurrentMousePosition();
+        _gameUserInteractionService.Update();
 
         if (Raylib.IsKeyPressed(KeyboardKey.Enter))
         {

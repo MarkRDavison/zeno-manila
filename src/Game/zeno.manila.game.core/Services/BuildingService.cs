@@ -4,6 +4,8 @@ internal sealed class BuildingService : IBuildingService
 {
     private readonly ManilaGameData _data;
 
+    private string _activeAuildingType = string.Empty;
+
     public BuildingService(ManilaGameData data)
     {
         _data = data;
@@ -13,21 +15,23 @@ internal sealed class BuildingService : IBuildingService
 
     public bool CanPlaceActiveBuildingAtTile(int x, int y)
     {
-        throw new NotImplementedException();
+        return false;
     }
 
     public bool PlaceActiveBuildingAtTile(int x, int y)
     {
-        throw new NotImplementedException();
+        return false;
     }
 
     public void SetBuildingModeActiveState(bool active)
     {
-        throw new NotImplementedException();
+        Console.WriteLine("SetBuildingModeActiveStateL {0}", active);
+        IsBuildingModeActive = active;
     }
 
     public void SetBuildingType(string buildingType)
     {
-        throw new NotImplementedException();
+        Console.WriteLine("SetBuildingType: {0}", buildingType);
+        _activeAuildingType = buildingType;
     }
 }
