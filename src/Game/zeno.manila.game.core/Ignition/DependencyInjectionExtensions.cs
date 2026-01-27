@@ -7,7 +7,8 @@ public static class DependencyInjectionExtensions
         services
             .AddScoped<IGameUserInteractionService, GameUserInteractionService>()
             .AddScoped<ITeamService, TeamService>()
-            .AddScoped<ITurnService, TurnService>();
+            .AddScoped<ITurnService, TurnService>()
+            .AddScoped<ICityPopulationService, CityPopulationService>();
 
         services
             .AddTransient<RenderSystem>();

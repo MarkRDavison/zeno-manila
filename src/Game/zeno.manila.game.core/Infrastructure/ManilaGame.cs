@@ -1,15 +1,14 @@
-﻿using zeno.manila.game.core.Systems;
-
-namespace zeno.manila.game.core.Infrastructure;
+﻿namespace zeno.manila.game.core.Infrastructure;
 
 public sealed class ManilaGame
 {
     private readonly ManilaGameData _data;
-    private readonly List<WorldSystem> _systems = [];
+    private readonly ICityPopulationService _cityPopulationService;
 
-    public ManilaGame(ManilaGameData data)
+    public ManilaGame(ManilaGameData data, ICityPopulationService cityPopulationService)
     {
         _data = data;
+        _cityPopulationService = cityPopulationService;
     }
 
     public void Init(Image image, LevelFileData levelData)
@@ -62,7 +61,7 @@ public sealed class ManilaGame
 
                 if (owningTeam is not 0)
                 {
-                    var entity = _data.World.Create(new CityComponent
+                    _data.Cities.Add(new City
                     {
                         X = x,
                         Y = y,
@@ -72,12 +71,10 @@ public sealed class ManilaGame
                 }
             }
         }
-
-        _systems.Add(new CityPopulationSystem(_data));
     }
 
     public void Update(float delta)
     {
-        _systems.ForEach(_ => _.Update(_data.World, delta));
+        _cityPopulationService.Update(delta);
     }
 }

@@ -1,21 +1,20 @@
-﻿namespace zeno.manila.game.core.Systems;
+﻿namespace zeno.manila.game.core.Services;
 
-internal sealed class CityPopulationSystem : WorldSystem
+internal sealed class CityPopulationService : ICityPopulationService
 {
     private readonly ManilaGameData _data;
     private const int MinTurnsForSprawlIncrease = 3;
 
-    public CityPopulationSystem(ManilaGameData data)
+    public CityPopulationService(ManilaGameData data)
     {
         _data = data;
     }
 
-    public override void Update(World world, float delta)
+    // TODO: Need a way to initialise this process, give city with no sprawl and X pop run until stable
+    public void Update(float delta)
     {
-        foreach (var e in world.GetWithAll<CityComponent>())
+        foreach (var city in _data.Cities)
         {
-            var city = e.Get<CityComponent>();
-
             if (city.LastSprawlIncreaseTurnNumber + MinTurnsForSprawlIncrease > _data.CurrentTurnNumber)
             {
                 continue;
@@ -29,18 +28,15 @@ internal sealed class CityPopulationSystem : WorldSystem
 
                 if (loc is not null)
                 {
-                    city.SprawlCount++;
                     city.LastSprawlIncreaseTurnNumber = _data.CurrentTurnNumber;
 
-                    var sprawl = new CitySprawlComponent
+                    var sprawl = new CitySprawl
                     {
                         X = (int)loc.Value.X,
-                        Y = (int)loc.Value.Y,
-                        CityEntityId = e.Id,
-                        TeamNumber = city.TeamNumber
+                        Y = (int)loc.Value.Y
                     };
 
-                    world.Create(sprawl);
+                    city.Sprawl.Add(sprawl);
 
                     var tile = _data.Tiles[(int)loc.Value.Y][(int)loc.Value.X];
                     tile.OwningTeam = city.TeamNumber;
@@ -53,7 +49,7 @@ internal sealed class CityPopulationSystem : WorldSystem
 
     // TODO: This works, but very inorganic, expands like a square, change to circle?
     //       With fuzzy edges? More likely closer to the center?
-    private Vector2? FindLocationForNewCitySprawl(CityComponent city)
+    private Vector2? FindLocationForNewCitySprawl(City city)
     {
         int breakout = 100;
         int radius = 0;
@@ -161,19 +157,19 @@ internal sealed class CityPopulationSystem : WorldSystem
         return null;
     }
 
-    private static int CalculateExpectedSprawlForPopulation(CityComponent city)
+    private static int CalculateExpectedSprawlForPopulation(City city)
     {
         int pow = 0;
 
         var pop = city.Population;
 
+        // TODO: Log?  
         while (pop >= 10)
         {
             pow++;
             pop /= 10;
         }
 
-        // TODO: TEMP
-        return pow + 100000;
+        return pow;
     }
 }

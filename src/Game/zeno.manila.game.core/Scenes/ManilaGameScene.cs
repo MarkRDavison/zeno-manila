@@ -58,17 +58,6 @@ public sealed class ManilaGameScene : IScene
         {
             _turnService.EndCurrentTurn();
         }
-        if (Raylib.IsKeyPressed(KeyboardKey.KpAdd))
-        {
-            for (int j = 0; j < 10; ++j)
-            {
-                for (int i = 0; i < 9; ++i)
-                {
-                    _turnService.EndCurrentTurn();
-                }
-                _game.Update(delta);
-            }
-        }
 
         _game.Update(delta);
         _gameRenderer.Update(delta);

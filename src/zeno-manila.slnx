@@ -7,4 +7,7 @@
     <Project Path="Game/zeno.manila.game.core/zeno.manila.game.core.csproj" Id="6c83f4a0-1320-444d-b900-32090b4a9bf9" />
     <Project Path="Game/zeno.manilla.game.client/zeno.manilla.game.client.csproj" Id="52fda020-64fc-443d-89d1-54c282d75332" />
   </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+  </Folder>
 </Solution>
