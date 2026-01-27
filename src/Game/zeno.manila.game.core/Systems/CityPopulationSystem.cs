@@ -25,27 +25,140 @@ internal sealed class CityPopulationSystem : WorldSystem
 
             if (expectedSprawlForPopulation > city.SprawlCount)
             {
-                var (x, y) = FindLocationForNewCitySprawl(city);
+                var loc = FindLocationForNewCitySprawl(city);
 
-                city.SprawlCount++;
-                city.LastSprawlIncreaseTurnNumber = _data.CurrentTurnNumber;
+                if (loc is not null)
+                {
+                    city.SprawlCount++;
+                    city.LastSprawlIncreaseTurnNumber = _data.CurrentTurnNumber;
 
-                var sprawl = new CitySprawlComponent { 
-                    X = x,
-                    Y = y,
-                    CityEntityId = e.Id,
-                    TeamNumber = city.TeamNumber
-                };
-                world.Create(sprawl);
+                    var sprawl = new CitySprawlComponent
+                    {
+                        X = (int)loc.Value.X,
+                        Y = (int)loc.Value.Y,
+                        CityEntityId = e.Id,
+                        TeamNumber = city.TeamNumber
+                    };
+
+                    world.Create(sprawl);
+
+                    var tile = _data.Tiles[(int)loc.Value.Y][(int)loc.Value.X];
+                    tile.OwningTeam = city.TeamNumber;
+                    _data.Tiles[(int)loc.Value.Y][(int)loc.Value.X] = tile;
+                }
+
             }
         }
     }
 
-    private (int x, int y) FindLocationForNewCitySprawl(CityComponent city)
+    // TODO: This works, but very inorganic, expands like a square, change to circle?
+    //       With fuzzy edges? More likely closer to the center?
+    private Vector2? FindLocationForNewCitySprawl(CityComponent city)
     {
+        int breakout = 100;
+        int radius = 0;
 
+        HashSet<Vector2> availableLocations = [];
 
-        throw new InvalidOperationException();
+        while (breakout > 0 && availableLocations.Count is 0)
+        {
+            var xPos = city.X;
+            var yPos = city.Y;
+
+            // N/S
+
+            for (int x = -radius; x <= radius; x++)
+            {
+                var tempX = xPos + x;
+
+                if (ValidateCoordinates(tempX, yPos - radius - 1, city.TeamNumber) is { } coordN)
+                {
+                    availableLocations.Add(coordN);
+                }
+
+                if (ValidateCoordinates(tempX, yPos + radius + 1, city.TeamNumber) is { } coordS)
+                {
+                    availableLocations.Add(coordS);
+                }
+            }
+
+            // E/W
+
+            for (int y = -radius; y <= radius; y++)
+            {
+                var tempY = yPos + y;
+
+                if (ValidateCoordinates(xPos + radius + 1, tempY, city.TeamNumber) is { } coordE)
+                {
+                    availableLocations.Add(coordE);
+                }
+
+                if (ValidateCoordinates(xPos - radius - 1, tempY, city.TeamNumber) is { } coordW)
+                {
+                    availableLocations.Add(coordW);
+                }
+            }
+
+            // Diagonals if radius > 1
+
+            if (radius > 0)
+            {
+                if (ValidateCoordinates(xPos + radius, yPos + radius, city.TeamNumber) is { } cpp)
+                {
+                    availableLocations.Add(cpp);
+                }
+
+                if (ValidateCoordinates(xPos + radius, yPos - radius, city.TeamNumber) is { } cpn)
+                {
+                    availableLocations.Add(cpn);
+                }
+
+                if (ValidateCoordinates(xPos - radius, yPos - radius, city.TeamNumber) is { } cnn)
+                {
+                    availableLocations.Add(cnn);
+                }
+
+                if (ValidateCoordinates(xPos - radius, yPos + radius, city.TeamNumber) is { } cnp)
+                {
+                    availableLocations.Add(cnp);
+                }
+            }
+
+            radius++;
+            breakout--;
+        }
+
+        if (availableLocations.Count is 0)
+        {
+            return null;
+        }
+
+        return availableLocations.Skip(Random.Shared.Next(availableLocations.Count)).First();
+    }
+
+    private Vector2? ValidateCoordinates(int x, int y, int owningTeam)
+    {
+        if (GetTile(x, y) is { } tile && tile.OwningTeam is 0 && tile.TileType is TileType.Land &&
+            ((GetTile(x + 1, y) is { } r && r.OwningTeam == owningTeam) ||
+            (GetTile(x - 1, y) is { } l && l.OwningTeam == owningTeam) ||
+            (GetTile(x, y - 1) is { } u && u.OwningTeam == owningTeam) ||
+            (GetTile(x, y + 1) is { } d && d.OwningTeam == owningTeam)))
+        {
+            return new Vector2(x, y);
+        }
+
+        return null;
+    }
+
+    private WorldTile? GetTile(int x, int y)
+    {
+        if (x >= 0 && y >= 0 &&
+            x < _data.WorldWidth && y < _data.WorldHeight)
+        {
+            return _data.Tiles[y][x];
+        }
+
+        return null;
     }
 
     private static int CalculateExpectedSprawlForPopulation(CityComponent city)
@@ -60,13 +173,7 @@ internal sealed class CityPopulationSystem : WorldSystem
             pop /= 10;
         }
 
-        return pow;
-    }
-
-    private List<(int x, int y)> GetValidCellsForSprawlRadius(int x, int y, int radius)
-    {
-        var cells = new List<(int x, int y)>();
-
-        return cells;
+        // TODO: TEMP
+        return pow + 100000;
     }
 }
