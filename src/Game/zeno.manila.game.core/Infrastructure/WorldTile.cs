@@ -1,15 +1,11 @@
 ﻿namespace zeno.manila.game.core.Infrastructure;
 
-public struct WorldTile
+public class WorldTile
 {
-    public WorldTile()
-    {
-        TileType = TileType.Unset;
-    }
 
     public int X { get; set; }
     public int Y { get; set; }
-    public readonly Color Color => TileType switch
+    public Color Color => TileType switch
     {
         TileType.Land => Color.Green,
         TileType.Water => Color.Blue,
@@ -18,6 +14,6 @@ public struct WorldTile
         _ => Color.Magenta
     };
 
-    public TileType TileType { get; set; }
+    public TileType TileType { get; set; } = TileType.Unset;
     public int OwningTeam { get; set; }
 }

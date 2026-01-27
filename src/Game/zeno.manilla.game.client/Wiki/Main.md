@@ -1,5 +1,7 @@
 # Alpha Strike
 
+[Task List](Tasks.md)
+
 - Building up defences etc to handle an initial strike and retain enough to detect/retaliate
 - Enough defences to withstand a rogue nation attack in its entirety, anti icbm missiles etc
 - intelligence to detect alliances or nations gearing up for attack

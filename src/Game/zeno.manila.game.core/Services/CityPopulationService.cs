@@ -15,35 +15,41 @@ internal sealed class CityPopulationService : ICityPopulationService
     {
         foreach (var city in _data.Cities)
         {
-            if (city.LastSprawlIncreaseTurnNumber + MinTurnsForSprawlIncrease > _data.CurrentTurnNumber)
+            // TODO:
+            // HandleCityPopGrowth(city);
+
+            HandleCitySprawl(city);
+        }
+    }
+
+    private void HandleCitySprawl(City city)
+    {
+        if (city.LastSprawlIncreaseTurnNumber + MinTurnsForSprawlIncrease > _data.CurrentTurnNumber)
+        {
+            return;
+        }
+
+        var expectedSprawlForPopulation = CalculateExpectedSprawlForPopulation(city);
+
+        if (expectedSprawlForPopulation > city.SprawlCount)
+        {
+            var loc = FindLocationForNewCitySprawl(city);
+
+            if (loc is not null && GetTile((int)loc.Value.X, (int)loc.Value.Y) is { } tile)
             {
-                continue;
-            }
 
-            var expectedSprawlForPopulation = CalculateExpectedSprawlForPopulation(city);
-
-            if (expectedSprawlForPopulation > city.SprawlCount)
-            {
-                var loc = FindLocationForNewCitySprawl(city);
-
-                if (loc is not null)
+                var sprawl = new CitySprawl
                 {
-                    city.LastSprawlIncreaseTurnNumber = _data.CurrentTurnNumber;
+                    X = (int)loc.Value.X,
+                    Y = (int)loc.Value.Y
+                };
 
-                    var sprawl = new CitySprawl
-                    {
-                        X = (int)loc.Value.X,
-                        Y = (int)loc.Value.Y
-                    };
+                city.Sprawl.Add(sprawl);
+                city.LastSprawlIncreaseTurnNumber = _data.CurrentTurnNumber;
 
-                    city.Sprawl.Add(sprawl);
-
-                    var tile = _data.Tiles[(int)loc.Value.Y][(int)loc.Value.X];
-                    tile.OwningTeam = city.TeamNumber;
-                    _data.Tiles[(int)loc.Value.Y][(int)loc.Value.X] = tile;
-                }
-
+                tile.OwningTeam = city.TeamNumber;
             }
+
         }
     }
 
