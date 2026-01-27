@@ -9,6 +9,7 @@ global using zeno.manila.game.core.Scenes;
 global using zeno.manila.game.core.Services;
 global using zeno.manila.game.core.Services.Contracts;
 global using zeno.manila.game.ECS.Systems;
+global using zeno.manila.game.Prototype;
 global using zeno.manilla.engine.Converters;
 global using zeno.manilla.engine.Core;
 global using zeno.manilla.engine.Ignition;
