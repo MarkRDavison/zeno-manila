@@ -10,4 +10,27 @@ public sealed class ManilaGameData
     public int CurrentTurnNumber { get; set; }
 
     public List<City> Cities { get; } = [];
+
+    public WorldTile GetSafeTile(int x, int y)
+    {
+        return Tiles[y][x];
+    }
+    public WorldTile? GetTile(int x, int y)
+    {
+        if (x < 0 || y < 0 || x >= WorldWidth || y >= WorldHeight)
+        {
+            return null;
+        }
+
+        return GetSafeTile(x, y);
+    }
+
+    public (City?, CitySprawl?) GetCityAndSprawlAtTile(int x, int y)
+    {
+        var city = Cities.FirstOrDefault(c => c.Sprawl.FirstOrDefault(_ => _.X == x && _.Y == y) is not null);
+
+        var sprawl = city?.Sprawl.FirstOrDefault(_ => _.X == x && _.Y == y);
+
+        return (city, sprawl);
+    }
 }

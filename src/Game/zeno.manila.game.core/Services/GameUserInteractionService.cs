@@ -84,16 +84,12 @@ internal class GameUserInteractionService : IGameUserInteractionService
             if (Raylib.IsMouseButtonPressed(MouseButton.Left) && GetTileCoordsAtCursor() is { } tileCoords)
             {
                 var activeTeam = _turnService.GetCurrentTeamTurn();
-                var tile = _gameData.Tiles[(int)tileCoords.Y][(int)tileCoords.X];
-                if (tile.OwningTeam == activeTeam)
+                var tile = _gameData.GetSafeTile((int)tileCoords.X, (int)tileCoords.Y);
+                var (city, sprawl) = _gameData.GetCityAndSprawlAtTile((int)tileCoords.X, (int)tileCoords.Y);
+
+                if (city is not null && sprawl is not null && tile.OwningTeam == activeTeam)
                 {
-                    var city = _gameData.Cities.FirstOrDefault(c => c.Sprawl.FirstOrDefault(_ => _.X == tileCoords.X && _.Y == tileCoords.Y) is not null);
-
-                    var sprawl = city?.Sprawl.FirstOrDefault(_ => _.X == tileCoords.X && _.Y == tileCoords.Y);
-
-                    if (city is not null && 
-                        sprawl is not null && 
-                        _buildingService.PlaceActiveBuildingAtTile((int)tileCoords.X, (int)tileCoords.Y))
+                    if (_buildingService.PlaceActiveBuildingAtTile((int)tileCoords.X, (int)tileCoords.Y, activeTeam))
                     {
                         DeactivateBuildingMode();
                     }
@@ -110,19 +106,6 @@ internal class GameUserInteractionService : IGameUserInteractionService
     private void DeactivateBuildingMode()
     {
         _buildingService.SetBuildingModeActiveState(false);
-    }
-
-    private void BuildActiveBuildingAt(int x, int y)
-    {
-        if (_buildingService.CanPlaceActiveBuildingAtTile(x, y))
-        {
-            _buildingService.PlaceActiveBuildingAtTile(x, y);
-        }
-    }
-
-    private void SetActiveBuilding(string buildingType)
-    {
-        _buildingService.SetBuildingType(buildingType);
     }
 
     public Vector2? ActiveTile { get; private set; }

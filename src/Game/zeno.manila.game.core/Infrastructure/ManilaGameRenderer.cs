@@ -59,6 +59,23 @@ public sealed class ManilaGameRenderer
             }
         }
 
+        foreach (var city in _gameData.Cities)
+        {
+            Raylib.DrawCircle(city.X * TileSize + TileSize / 2, city.Y * TileSize + TileSize / 2, TileSize / 3, Color.Black);
+
+            foreach (var sprawl in city.Sprawl)
+            {
+                if (sprawl.RelatedEntity is { } entity)
+                {
+                    Raylib.DrawCircle(
+                        sprawl.X * TileSize + TileSize / 2,
+                        sprawl.Y * TileSize + TileSize / 2,
+                        TileSize / 4,
+                        Color.Pink);
+                }
+            }
+        }
+
         if (_userInteractionService.ActiveTile is { } activeTile)
         {
             Raylib.DrawRectangleLinesEx(
