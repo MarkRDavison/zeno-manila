@@ -2,6 +2,7 @@
 
 public sealed class ManilaGameRenderer
 {
+    private bool _showDebug = true;
     private readonly ManilaGameData _gameData;
     private readonly IGameUserInteractionService _userInteractionService;
     private readonly ITeamService _teamService;
@@ -21,7 +22,10 @@ public sealed class ManilaGameRenderer
 
     public void Update(float delta)
     {
-
+        if (Raylib.IsKeyPressed(KeyboardKey.F3))
+        {
+            _showDebug = !_showDebug;
+        }
     }
 
     public void Draw(Camera2D camera)
@@ -96,33 +100,46 @@ public sealed class ManilaGameRenderer
 
         int yInfoOffset = 32;
 
-        Raylib.DrawText(string.Format("Turn: {0:0}", _turnService.CurrentTurnNumber), 10, yInfoOffset, 32, Color.Black);
-        yInfoOffset += 32;
-        Raylib.DrawText(string.Format("Camera: {0:0},{1:0}", camera.Target.X, camera.Target.Y), 10, yInfoOffset, 32, Color.Black);
-        yInfoOffset += 32;
-        Raylib.DrawText(string.Format("Mouse: {0:0},{1:0}", mouse.X, mouse.Y), 10, yInfoOffset, 32, Color.Black);
-        yInfoOffset += 32;
-        Raylib.DrawText(string.Format("World: {0:0},{1:0}", world.X, world.Y), 10, yInfoOffset, 32, Color.Black);
-        yInfoOffset += 32;
-
-        if (_userInteractionService.ActiveTile is { } activeTile2)
+        if (_showDebug)
         {
-            var tile = _gameData.Tiles[(int)activeTile2.Y][(int)activeTile2.X];
 
-            Raylib.DrawText(string.Format("Active: {0:0},{1:0}", activeTile2.X, activeTile2.Y), 10, yInfoOffset, 32, Color.Black);
+            Raylib.DrawText(string.Format("Turn: {0:0}", _turnService.CurrentTurnNumber), 10, yInfoOffset, 32, Color.Black);
+            yInfoOffset += 32;
+            Raylib.DrawText(string.Format("Camera: {0:0},{1:0}", camera.Target.X, camera.Target.Y), 10, yInfoOffset, 32, Color.Black);
+            yInfoOffset += 32;
+            Raylib.DrawText(string.Format("Mouse: {0:0},{1:0}", mouse.X, mouse.Y), 10, yInfoOffset, 32, Color.Black);
+            yInfoOffset += 32;
+            Raylib.DrawText(string.Format("World: {0:0},{1:0}", world.X, world.Y), 10, yInfoOffset, 32, Color.Black);
             yInfoOffset += 32;
 
-            if (tile.OwningTeam is 0)
+            if (_userInteractionService.ActiveTile is { } activeTile2)
             {
-                Raylib.DrawText("Owner: Unowned", 10, yInfoOffset, 32, Color.Black);
-            }
-            else
-            {
-                var owner = _teamService.GetTeamName(tile.OwningTeam);
-                Raylib.DrawText(string.Format("Owner: {0} ({1:0})", owner, tile.OwningTeam), 10, yInfoOffset, 32, Color.Black);
+                var tile = _gameData.Tiles[(int)activeTile2.Y][(int)activeTile2.X];
+
+                Raylib.DrawText(string.Format("Active: {0:0},{1:0}", activeTile2.X, activeTile2.Y), 10, yInfoOffset, 32, Color.Black);
+                yInfoOffset += 32;
+
+                if (tile.OwningTeam is 0)
+                {
+                    Raylib.DrawText("Owner: Unowned", 10, yInfoOffset, 32, Color.Black);
+                }
+                else
+                {
+                    var owner = _teamService.GetTeamName(tile.OwningTeam);
+                    Raylib.DrawText(string.Format("Owner: {0} ({1:0})", owner, tile.OwningTeam), 10, yInfoOffset, 32, Color.Black);
+                }
+
+                var (city, sprawl) = _gameData.GetCityAndSprawlAtTile((int)activeTile2.X, (int)activeTile2.Y);
+
+                if (city is not null && sprawl is not null && sprawl.RelatedEntity is { } entity)
+                {
+                    yInfoOffset += 32;
+                    Raylib.DrawText(string.Format("Related entity: {0}", entity.Id), 10, yInfoOffset, 32, Color.Black);
+                }
+
+                yInfoOffset += 32;
             }
 
-            yInfoOffset += 32;
         }
 
         var currentTeam = _turnService.GetCurrentTeamTurn();
