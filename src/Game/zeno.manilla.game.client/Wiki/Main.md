@@ -43,6 +43,7 @@
 
 - Military forces
 	- All types, land, air, navy, space
+	- Boomers/attack subs
 	- Train/deploy additional/order from industry
 	- Can deploy/move air defense etc, may need to move on a schedule
 	- Decomission
