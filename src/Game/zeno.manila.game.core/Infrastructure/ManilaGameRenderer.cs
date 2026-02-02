@@ -105,11 +105,6 @@ public sealed class ManilaGameRenderer
 
         if (_userInteractionService.ActiveTile is { } activeTile)
         {
-            if (_sidePanelService.GetActivePanel() is "RelatedEntity")
-            {
-                _sidePanelService.ClearPanel();
-            }
-
             Raylib.DrawRectangleLinesEx(
                 new Rectangle(
                     new Vector2(
@@ -118,28 +113,6 @@ public sealed class ManilaGameRenderer
                     new Vector2(TileSize, TileSize)),
                 2.0f / camera.Zoom,
                 Color.White);
-
-            // TODO: PERF: Keep 1 of each panel type and just assign it as appropriate?
-            var (city, sprawl) = _gameData.GetCityAndSprawlAtTile((int)activeTile.X, (int)activeTile.Y);
-
-            if (city is not null)
-            {
-                if (sprawl is not null && sprawl.RelatedEntity is { } entity)
-                {
-                    if (_sidePanelService.ActiveSidePanel is null)
-                    {
-                        _sidePanelService.DisplayPanel("RelatedEntity");
-                        if (_sidePanelService.ActiveSidePanel is RelatedEntitySidePanel resp)
-                        {
-                            resp.SetRelatedEntity(entity);
-                        }
-                    }
-                }
-            }
-        }
-        else if (_sidePanelService.GetActivePanel() is "RelatedEntity")
-        {
-            _sidePanelService.ClearPanel();
         }
 
         Raylib.EndMode2D();

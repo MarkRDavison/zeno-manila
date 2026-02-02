@@ -56,6 +56,33 @@ internal class GameUserInteractionService : IGameUserInteractionService
             if (GetTileCoordsAtCursor() is { } tileCoords)
             {
                 ActiveTile = tileCoords;
+
+                var displayRelatedEntityPanel = false;
+
+                var (city, sprawl) = _gameData.GetCityAndSprawlAtTile((int)tileCoords.X, (int)tileCoords.Y);
+
+                if (city is not null)
+                {
+                    if (sprawl is not null && sprawl.RelatedEntity is { } entity)
+                    {
+                        if (_sidePanelService.GetActivePanel() is "RelatedEntity" or null)
+                        {
+                            _sidePanelService.DisplayPanel("RelatedEntity");
+                            if (_sidePanelService.ActiveSidePanel is RelatedEntitySidePanel resp)
+                            {
+                                resp.SetRelatedEntity(entity);
+                                displayRelatedEntityPanel = true;
+                            }
+                        }
+                    }
+
+                }
+
+                if (!displayRelatedEntityPanel && _sidePanelService.GetActivePanel() is "RelatedEntity")
+                {
+                    _sidePanelService.ClearPanel();
+                }
+
                 return true;
             }
         }
@@ -65,6 +92,10 @@ internal class GameUserInteractionService : IGameUserInteractionService
 
     public void Update()
     {
+        if (Raylib.IsKeyPressed(KeyboardKey.Escape))
+        {
+            _sidePanelService.ClearPanel();
+        }
         TrySelectAtCurrentMousePosition();
         HandleBuildingStuff();
     }

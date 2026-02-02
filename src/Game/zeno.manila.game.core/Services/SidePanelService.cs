@@ -5,13 +5,35 @@ public sealed class SidePanelService : ISidePanelService
     private string? _activePanel;
     private readonly BuildingsSidePanel _buildingsSidePanel;
     private readonly RelatedEntitySidePanel _relatedEntitySidePanel;
+    private readonly ManilaGameData _manilaGameData;
+    private readonly IBuildingService _buildingService;
 
     public SidePanelService(
         BuildingsSidePanel buildingsSidePanel,
-        RelatedEntitySidePanel relatedEntitySidePanel)
+        RelatedEntitySidePanel relatedEntitySidePanel,
+        ManilaGameData manilaGameData,
+        IBuildingService buildingService)
     {
         _buildingsSidePanel = buildingsSidePanel;
         _relatedEntitySidePanel = relatedEntitySidePanel;
+        _manilaGameData = manilaGameData;
+        _buildingService = buildingService;
+
+        _buildingService.OnBuildingCreated += (s, e) =>
+        {
+            if (!e.CreatedManually)
+            {
+                return;
+            }
+
+            var (_, sprawl) = _manilaGameData.GetCityAndSprawlAtTile(e.X, e.Y);
+
+            if (sprawl?.RelatedEntity is not null)
+            {
+                _relatedEntitySidePanel.SetRelatedEntity(sprawl.RelatedEntity);
+                DisplayPanel("RelatedEntity");
+            }
+        };
     }
 
 
@@ -22,10 +44,7 @@ public sealed class SidePanelService : ISidePanelService
     {
         _activePanel = panel;
 
-        if (ActiveSidePanel is not null)
-        {
-            ActiveSidePanel.IsActive = false;
-        }
+        ActiveSidePanel?.IsActive = false;
 
         ActiveSidePanel = panel switch
         {

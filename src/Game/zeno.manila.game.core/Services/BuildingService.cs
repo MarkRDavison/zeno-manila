@@ -6,13 +6,15 @@ internal sealed class BuildingService : IBuildingService
 
     private string _activeBuildingType = string.Empty;
 
-    public BuildingService(ManilaGameData data)
+    public BuildingService(
+        ManilaGameData data)
     {
         _data = data;
     }
 
     public bool IsBuildingModeActive { get; private set; }
     public EventHandler OnBuildingModeChanged { get; set; } = default!;
+    public EventHandler<BuildingCreatedEventArgs> OnBuildingCreated { get; set; } = default!;
 
     public bool CanPlaceActiveBuildingAtTile(int x, int y, int teamNumber)
     {
@@ -77,6 +79,11 @@ internal sealed class BuildingService : IBuildingService
         };
 
         SetBuildingModeActiveState(false);
+        OnBuildingCreated?.Invoke(this, new BuildingCreatedEventArgs(x, y)
+        {
+            CreatedManually = true
+        });
+
         return sprawl.RelatedEntity is not null;
     }
 

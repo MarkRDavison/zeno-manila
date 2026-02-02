@@ -4,6 +4,7 @@ global using System.Numerics;
 global using System.Text.Json;
 global using zeno.manila.game.core.Components;
 global using zeno.manila.game.core.Entities;
+global using zeno.manila.game.core.Events;
 global using zeno.manila.game.core.Infrastructure;
 global using zeno.manila.game.core.Models;
 global using zeno.manila.game.core.Scenes;

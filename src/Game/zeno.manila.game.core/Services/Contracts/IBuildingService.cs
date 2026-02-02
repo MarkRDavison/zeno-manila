@@ -9,4 +9,5 @@ public interface IBuildingService
     bool PlaceActiveBuildingAtTile(int x, int y, int teamNumber);
 
     EventHandler OnBuildingModeChanged { get; set; }
+    EventHandler<BuildingCreatedEventArgs> OnBuildingCreated { get; set; }
 }
