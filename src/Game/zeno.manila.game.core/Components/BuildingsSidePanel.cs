@@ -4,12 +4,18 @@ public class BuildingsSidePanel : SidePanel
 {
     private readonly List<string> _buildingNames;
     private readonly List<Rectangle> _buildingBounds = [];
+    private readonly IBuildingService _buildingService;
 
     private int _selectedIndex = -1;
 
-    public BuildingsSidePanel()
+    public BuildingsSidePanel(IBuildingService buildingService)
     {
+        _buildingService = buildingService;
         _buildingNames = ["MilitaryBase", "PowerPlant", "Airport", "Port"];
+        _buildingService.OnBuildingModeChanged += (s, e) =>
+        {
+            _selectedIndex = -1;
+        };
     }
 
     protected override void UpdateContent(float delta)
@@ -26,6 +32,7 @@ public class BuildingsSidePanel : SidePanel
                         r.Y <= mouse.Y && mouse.Y <= r.Y + r.Height)
                     {
                         _selectedIndex = i;
+                        _buildingService.SetBuildingType(_buildingNames[i]);
                         break;
                     }
 
@@ -44,7 +51,7 @@ public class BuildingsSidePanel : SidePanel
         {
             Raylib.DrawText(text, xOffset, yOffset, size, col);
             yOffset += size;
-            
+
             return new Rectangle(xOffset, yOffset - size, Raylib.MeasureText(text, size), size);
         }
 

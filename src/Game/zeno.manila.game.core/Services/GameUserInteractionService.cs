@@ -6,17 +6,20 @@ internal class GameUserInteractionService : IGameUserInteractionService
     private readonly ManilaGameData _gameData;
     private readonly IBuildingService _buildingService;
     private readonly ITurnService _turnService;
+    private readonly ISidePanelService _sidePanelService;
 
     public GameUserInteractionService(
         ManilaGameCamera manilaGameCamera,
         ManilaGameData gameData,
         IBuildingService buildingService,
-        ITurnService turnService)
+        ITurnService turnService,
+        ISidePanelService sidePanelService)
     {
         _manilaGameCamera = manilaGameCamera;
         _gameData = gameData;
         _buildingService = buildingService;
         _turnService = turnService;
+        _sidePanelService = sidePanelService;
     }
 
     private Vector2? GetTileCoordsAtCursor()
@@ -41,7 +44,7 @@ internal class GameUserInteractionService : IGameUserInteractionService
 
     public bool TrySelectAtCurrentMousePosition()
     {
-        if (ActiveTile is not null && Raylib.IsKeyPressed(KeyboardKey.Backspace))
+        if (ActiveTile is not null && Raylib.IsKeyPressed(KeyboardKey.Escape))
         {
             ActiveTile = null;
         }
@@ -68,15 +71,18 @@ internal class GameUserInteractionService : IGameUserInteractionService
 
     private void HandleBuildingStuff()
     {
-        if (_buildingService.IsBuildingModeActive && Raylib.IsKeyPressed(KeyboardKey.Backspace))
+        if (_buildingService.IsBuildingModeActive && Raylib.IsKeyPressed(KeyboardKey.Escape))
         {
             DeactivateBuildingMode();
             return;
         }
 
-        if (!_buildingService.IsBuildingModeActive && Raylib.IsKeyPressed(KeyboardKey.B))
+        if (Raylib.IsKeyPressed(KeyboardKey.B))
         {
-            ActivateBuildingMode();
+            if (!_buildingService.IsBuildingModeActive)
+            {
+                ActivateBuildingMode();
+            }
         }
 
         if (_buildingService.IsBuildingModeActive)
@@ -101,11 +107,16 @@ internal class GameUserInteractionService : IGameUserInteractionService
     private void ActivateBuildingMode()
     {
         _buildingService.SetBuildingModeActiveState(true);
+        _sidePanelService.DisplayPanel("Buildings");
     }
 
     private void DeactivateBuildingMode()
     {
         _buildingService.SetBuildingModeActiveState(false);
+        if (_sidePanelService.GetActivePanel() is "Buildings")
+        {
+            _sidePanelService.ClearPanel();
+        }
     }
 
     public Vector2? ActiveTile { get; private set; }

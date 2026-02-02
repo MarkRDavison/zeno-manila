@@ -8,42 +8,34 @@ public sealed class ManilaGameRenderer
     private readonly ITeamService _teamService;
     private readonly ITurnService _turnService;
     private readonly IBuildingService _buildingService;
-
-    private SidePanel? _activeSidePanel;
-
-    private BuildingsSidePanel _buildingsSidePanel;
-    private RelatedEntitySidePanel _relatedEntitySidePanel;
+    private readonly ISidePanelService _sidePanelService;
 
     public ManilaGameRenderer(
         ManilaGameData gameData,
         IGameUserInteractionService userInteractionService,
         ITeamService teamService,
         ITurnService turnService,
-        IBuildingService buildingService)
+        IBuildingService buildingService,
+        ISidePanelService sidePanelService)
     {
         _gameData = gameData;
         _userInteractionService = userInteractionService;
         _teamService = teamService;
         _turnService = turnService;
         _buildingService = buildingService;
+        _sidePanelService = sidePanelService;
 
-        _buildingsSidePanel = new();
-        _relatedEntitySidePanel = new();
-
-        _buildingService.OnBuildingModeChanged += (s, e) => { 
+        _buildingService.OnBuildingModeChanged += (s, e) =>
+        {
+            Console.WriteLine("_buildingService.OnBuildingModeChanged, active: {0}", _buildingService.IsBuildingModeActive);
+            // TODO: Where should this be located???
             if (_buildingService.IsBuildingModeActive)
             {
-                _buildingsSidePanel.IsActive = true;
-                _activeSidePanel = _buildingsSidePanel;
+                _sidePanelService.DisplayPanel("Buildings");
             }
-            else if (_activeSidePanel == _buildingsSidePanel)
+            else if (_sidePanelService.GetActivePanel() is "Buildings")
             {
-                _buildingsSidePanel.IsActive = false;
-                _activeSidePanel = null;
-            }
-            else
-            {
-                _buildingsSidePanel.IsActive = false;
+                _sidePanelService.ClearPanel();
             }
         };
     }
@@ -55,10 +47,7 @@ public sealed class ManilaGameRenderer
             _showDebug = !_showDebug;
         }
 
-        if (_activeSidePanel is not null)
-        {
-            _activeSidePanel.Update(delta);
-        }
+        _sidePanelService.ActiveSidePanel?.Update(delta);
     }
 
     public void Draw(Camera2D camera)
@@ -116,9 +105,9 @@ public sealed class ManilaGameRenderer
 
         if (_userInteractionService.ActiveTile is { } activeTile)
         {
-            if (_activeSidePanel is not null)
+            if (_sidePanelService.GetActivePanel() is "RelatedEntity")
             {
-                _activeSidePanel.IsActive = false;
+                _sidePanelService.ClearPanel();
             }
 
             Raylib.DrawRectangleLinesEx(
@@ -137,18 +126,20 @@ public sealed class ManilaGameRenderer
             {
                 if (sprawl is not null && sprawl.RelatedEntity is { } entity)
                 {
-                    _activeSidePanel = _relatedEntitySidePanel;
-                    if (_activeSidePanel is RelatedEntitySidePanel resp)
+                    if (_sidePanelService.ActiveSidePanel is null)
                     {
-                        resp.SetRelatedEntity(entity);
-                        _activeSidePanel.IsActive = true;
+                        _sidePanelService.DisplayPanel("RelatedEntity");
+                        if (_sidePanelService.ActiveSidePanel is RelatedEntitySidePanel resp)
+                        {
+                            resp.SetRelatedEntity(entity);
+                        }
                     }
                 }
             }
         }
-        else if (_activeSidePanel == _relatedEntitySidePanel)
+        else if (_sidePanelService.GetActivePanel() is "RelatedEntity")
         {
-            _activeSidePanel = null;
+            _sidePanelService.ClearPanel();
         }
 
         Raylib.EndMode2D();
@@ -249,9 +240,6 @@ public sealed class ManilaGameRenderer
             resources.ForEach(renderResource);
         }
 
-        if (_activeSidePanel is not null)
-        {
-            _activeSidePanel.Draw();
-        }
+        _sidePanelService.ActiveSidePanel?.Draw();
     }
 }

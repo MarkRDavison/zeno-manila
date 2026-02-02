@@ -9,7 +9,12 @@ public static class DependencyInjectionExtensions
             .AddScoped<ITeamService, TeamService>()
             .AddScoped<ITurnService, TurnService>()
             .AddScoped<ICityPopulationService, CityPopulationService>()
-            .AddScoped<IBuildingService, BuildingService>();
+            .AddScoped<IBuildingService, BuildingService>()
+            .AddScoped<ISidePanelService, SidePanelService>();
+
+        services
+            .AddScoped<BuildingsSidePanel>()
+            .AddScoped<RelatedEntitySidePanel>();
 
         services
             .AddScoped<ManilaGameCamera>()

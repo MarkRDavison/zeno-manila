@@ -4,7 +4,7 @@ internal sealed class BuildingService : IBuildingService
 {
     private readonly ManilaGameData _data;
 
-    private string _activeBuildingType = "MilitaryBase";
+    private string _activeBuildingType = string.Empty;
 
     public BuildingService(ManilaGameData data)
     {
@@ -16,6 +16,11 @@ internal sealed class BuildingService : IBuildingService
 
     public bool CanPlaceActiveBuildingAtTile(int x, int y, int teamNumber)
     {
+        if (string.IsNullOrEmpty(_activeBuildingType))
+        {
+            return false;
+        }
+
         var tile = _data.GetTile(x, y);
 
         if (tile is null)
@@ -63,12 +68,16 @@ internal sealed class BuildingService : IBuildingService
             return false;
         }
 
-        sprawl.RelatedEntity = new MilitaryBase
+        // TODO: Prototype system
+        sprawl.RelatedEntity = _activeBuildingType switch
         {
-            Id = Guid.NewGuid()
+            "MilitaryBase" => new MilitaryBase(),
+            "PowerPlant" => new PowerPlant(),
+            _ => throw new InvalidOperationException($"Cannot create building from type {_activeBuildingType}")
         };
 
-        return true;
+        SetBuildingModeActiveState(false);
+        return sprawl.RelatedEntity is not null;
     }
 
     public void SetBuildingModeActiveState(bool active)
