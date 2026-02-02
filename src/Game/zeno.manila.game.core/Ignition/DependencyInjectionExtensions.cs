@@ -13,6 +13,9 @@ public static class DependencyInjectionExtensions
             .AddScoped<ISidePanelService, SidePanelService>();
 
         services
+            .AddScoped<IPrototypeService<BuildingPrototype, Building>, BuildingPrototypeService>();
+
+        services
             .AddScoped<BuildingsSidePanel>()
             .AddScoped<RelatedEntitySidePanel>();
 

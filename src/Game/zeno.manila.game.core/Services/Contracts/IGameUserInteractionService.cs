@@ -3,7 +3,7 @@
 public interface IGameUserInteractionService
 {
     bool TrySelectAtCurrentMousePosition();
-
+    Vector2? GetTileCoordsAtCursor();
     void Update();
 
     Vector2? ActiveTile { get; }

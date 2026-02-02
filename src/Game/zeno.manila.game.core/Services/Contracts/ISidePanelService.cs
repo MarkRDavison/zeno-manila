@@ -6,5 +6,6 @@ public interface ISidePanelService
     EventHandler OnPanelChanged { get; set; }
     void DisplayPanel(string panel);
     void ClearPanel();
+    void ClearPanel(string panel);
     string? GetActivePanel();
 }

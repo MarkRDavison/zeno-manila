@@ -27,15 +27,10 @@ public sealed class ManilaGameRenderer
 
         _buildingService.OnBuildingModeChanged += (s, e) =>
         {
-            Console.WriteLine("_buildingService.OnBuildingModeChanged, active: {0}", _buildingService.IsBuildingModeActive);
             // TODO: Where should this be located???
             if (_buildingService.IsBuildingModeActive)
             {
-                _sidePanelService.DisplayPanel("Buildings");
-            }
-            else if (_sidePanelService.GetActivePanel() is "Buildings")
-            {
-                _sidePanelService.ClearPanel();
+                _sidePanelService.DisplayPanel(ManilaConstants.Panel_Buildings);
             }
         };
     }
@@ -113,6 +108,18 @@ public sealed class ManilaGameRenderer
                     new Vector2(TileSize, TileSize)),
                 2.0f / camera.Zoom,
                 Color.White);
+        }
+
+        if (_buildingService.IsBuildingModeActive && _buildingService.HasSelectedBuilding && _userInteractionService.GetTileCoordsAtCursor() is { } tileCoords)
+        {
+            var canPlace = _buildingService.CanPlaceActiveBuildingAtTile((int)tileCoords.X, (int)tileCoords.Y, _turnService.GetCurrentTeamTurn());
+
+            Raylib.DrawCircle(
+                (int)tileCoords.X * TileSize + TileSize / 2,
+                (int)tileCoords.Y * TileSize + TileSize / 2,
+                TileSize / 3,
+                canPlace ? Color.Green : Color.Red);
+
         }
 
         Raylib.EndMode2D();

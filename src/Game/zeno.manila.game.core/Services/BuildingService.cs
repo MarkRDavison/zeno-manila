@@ -3,22 +3,26 @@
 internal sealed class BuildingService : IBuildingService
 {
     private readonly ManilaGameData _data;
+    private readonly IPrototypeService<BuildingPrototype, Building> _buildingPrototypeService;
 
     private string _activeBuildingType = string.Empty;
 
     public BuildingService(
-        ManilaGameData data)
+        ManilaGameData data,
+        IPrototypeService<BuildingPrototype, Building> buildingPrototypeService)
     {
         _data = data;
+        _buildingPrototypeService = buildingPrototypeService;
     }
 
     public bool IsBuildingModeActive { get; private set; }
+    public bool HasSelectedBuilding => !string.IsNullOrEmpty(_activeBuildingType);
     public EventHandler OnBuildingModeChanged { get; set; } = default!;
     public EventHandler<BuildingCreatedEventArgs> OnBuildingCreated { get; set; } = default!;
 
     public bool CanPlaceActiveBuildingAtTile(int x, int y, int teamNumber)
     {
-        if (string.IsNullOrEmpty(_activeBuildingType))
+        if (!HasSelectedBuilding)
         {
             return false;
         }
@@ -35,8 +39,9 @@ internal sealed class BuildingService : IBuildingService
             return false;
         }
 
-        // TODO: Different for different buildings
-        if (tile.TileType != TileType.Land)
+        var prototype = _buildingPrototypeService.GetPrototype(_activeBuildingType);
+
+        if (!prototype.ValidTiles.Contains(tile.TileType))
         {
             return false;
         }
@@ -70,13 +75,7 @@ internal sealed class BuildingService : IBuildingService
             return false;
         }
 
-        // TODO: Prototype system
-        sprawl.RelatedEntity = _activeBuildingType switch
-        {
-            "MilitaryBase" => new MilitaryBase(),
-            "PowerPlant" => new PowerPlant(),
-            _ => throw new InvalidOperationException($"Cannot create building from type {_activeBuildingType}")
-        };
+        sprawl.RelatedEntity = _buildingPrototypeService.CreateEntity(_activeBuildingType);
 
         SetBuildingModeActiveState(false);
         OnBuildingCreated?.Invoke(this, new BuildingCreatedEventArgs(x, y)
@@ -84,11 +83,12 @@ internal sealed class BuildingService : IBuildingService
             CreatedManually = true
         });
 
-        return sprawl.RelatedEntity is not null;
+        return true;
     }
 
     public void SetBuildingModeActiveState(bool active)
     {
+        _activeBuildingType = string.Empty;
         IsBuildingModeActive = active;
         OnBuildingModeChanged?.Invoke(this, EventArgs.Empty);
     }

@@ -26,10 +26,5 @@ public class RelatedEntitySidePanel : SidePanel
         }
 
         drawAndOffset(_entity.Name ?? string.Empty, 32);
-
-        if (_entity is MilitaryBase mb)
-        {
-            drawAndOffset($"Tier: {mb.Tier}", 24);
-        }
     }
 }

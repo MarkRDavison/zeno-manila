@@ -1,4 +1,7 @@
-﻿namespace zeno.manilla.game.client;
+﻿using zeno.manila.game.core.Entities.Buildings;
+using zeno.manila.game.Prototype;
+
+namespace zeno.manilla.game.client;
 
 public class Worker<TStartScene> : BackgroundService
     where TStartScene : IScene
@@ -42,6 +45,32 @@ public class Worker<TStartScene> : BackgroundService
                 var filename = Path.GetFileNameWithoutExtension(path);
                 textureManager.LoadTexture(filename, path);
             }
+        }
+
+        {
+            var buildingPrototypes = scope.ServiceProvider.GetRequiredService<IPrototypeService<BuildingPrototype, Building>>();
+
+            buildingPrototypes.RegisterPrototype(
+                "PowerPlant",
+                new BuildingPrototype
+                {
+                    Name = "Power Plant",
+                    ValidTiles = [TileType.Land]
+                });
+            buildingPrototypes.RegisterPrototype(
+                "MilitaryBase",
+                new BuildingPrototype
+                {
+                    Name = "Military Base",
+                    ValidTiles = [TileType.Land]
+                });
+            buildingPrototypes.RegisterPrototype(
+                "ShipBuilder",
+                new BuildingPrototype
+                {
+                    Name = "Ship Builder",
+                    ValidTiles = [TileType.Shore]
+                });
         }
 
         var data = scope.ServiceProvider.GetRequiredService<ManilaGameData>();

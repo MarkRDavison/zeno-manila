@@ -22,7 +22,7 @@ internal class GameUserInteractionService : IGameUserInteractionService
         _sidePanelService = sidePanelService;
     }
 
-    private Vector2? GetTileCoordsAtCursor()
+    public Vector2? GetTileCoordsAtCursor()
     {
         var worldCoords = Raylib.GetScreenToWorld2D(Raylib.GetMousePosition(), _manilaGameCamera.Camera);
 
@@ -65,9 +65,9 @@ internal class GameUserInteractionService : IGameUserInteractionService
                 {
                     if (sprawl is not null && sprawl.RelatedEntity is { } entity)
                     {
-                        if (_sidePanelService.GetActivePanel() is "RelatedEntity" or null)
+                        if (_sidePanelService.GetActivePanel() is ManilaConstants.Panel_RelatedEntity or null)
                         {
-                            _sidePanelService.DisplayPanel("RelatedEntity");
+                            _sidePanelService.DisplayPanel(ManilaConstants.Panel_RelatedEntity);
                             if (_sidePanelService.ActiveSidePanel is RelatedEntitySidePanel resp)
                             {
                                 resp.SetRelatedEntity(entity);
@@ -78,7 +78,7 @@ internal class GameUserInteractionService : IGameUserInteractionService
 
                 }
 
-                if (!displayRelatedEntityPanel && _sidePanelService.GetActivePanel() is "RelatedEntity")
+                if (!displayRelatedEntityPanel && _sidePanelService.GetActivePanel() is ManilaConstants.Panel_RelatedEntity)
                 {
                     _sidePanelService.ClearPanel();
                 }
@@ -138,16 +138,13 @@ internal class GameUserInteractionService : IGameUserInteractionService
     private void ActivateBuildingMode()
     {
         _buildingService.SetBuildingModeActiveState(true);
-        _sidePanelService.DisplayPanel("Buildings");
+        _sidePanelService.DisplayPanel(ManilaConstants.Panel_Buildings);
     }
 
     private void DeactivateBuildingMode()
     {
         _buildingService.SetBuildingModeActiveState(false);
-        if (_sidePanelService.GetActivePanel() is "Buildings")
-        {
-            _sidePanelService.ClearPanel();
-        }
+        _sidePanelService.ClearPanel(ManilaConstants.Panel_Buildings);
     }
 
     public Vector2? ActiveTile { get; private set; }

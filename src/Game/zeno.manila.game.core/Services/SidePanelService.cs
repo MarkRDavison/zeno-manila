@@ -30,8 +30,8 @@ public sealed class SidePanelService : ISidePanelService
 
             if (sprawl?.RelatedEntity is not null)
             {
+                DisplayPanel(ManilaConstants.Panel_RelatedEntity);
                 _relatedEntitySidePanel.SetRelatedEntity(sprawl.RelatedEntity);
-                DisplayPanel("RelatedEntity");
             }
         };
     }
@@ -48,8 +48,8 @@ public sealed class SidePanelService : ISidePanelService
 
         ActiveSidePanel = panel switch
         {
-            "Buildings" => _buildingsSidePanel,
-            "RelatedEntity" => _relatedEntitySidePanel,
+            ManilaConstants.Panel_Buildings => _buildingsSidePanel,
+            ManilaConstants.Panel_RelatedEntity => _relatedEntitySidePanel,
             _ => throw new InvalidOperationException($"Trying to display an invalid panel: {panel}")
         };
 
@@ -65,6 +65,13 @@ public sealed class SidePanelService : ISidePanelService
 
         ActiveSidePanel = null;
         _activePanel = null;
+    }
+    public void ClearPanel(string panel)
+    {
+        if (GetActivePanel() == panel)
+        {
+            ClearPanel();
+        }
     }
 
     public string? GetActivePanel() => _activePanel;

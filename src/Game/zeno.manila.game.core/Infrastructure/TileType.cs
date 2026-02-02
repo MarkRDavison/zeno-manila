@@ -5,5 +5,6 @@ public enum TileType
     Unset = 0,
     Edge = 1,
     Water = 2,
-    Land = 3
+    Land = 3,
+    Shore = 4
 }

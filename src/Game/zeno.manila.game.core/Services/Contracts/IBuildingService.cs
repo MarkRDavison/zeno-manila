@@ -3,6 +3,7 @@
 public interface IBuildingService
 {
     bool IsBuildingModeActive { get; }
+    bool HasSelectedBuilding { get; }
     void SetBuildingModeActiveState(bool active);
     void SetBuildingType(string buildingType);
     bool CanPlaceActiveBuildingAtTile(int x, int y, int teamNumber);

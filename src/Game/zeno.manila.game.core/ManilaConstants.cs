@@ -9,4 +9,7 @@ public static class ManilaConstants
     public const string Resource_Electronics = "Electronics";
     public const string Resource_Fuel = "Fuel";
     public const string Resource_Explosives = "Explosives";
+
+    public const string Panel_Buildings = "Buildings";
+    public const string Panel_RelatedEntity = "RelatedEntity";
 }

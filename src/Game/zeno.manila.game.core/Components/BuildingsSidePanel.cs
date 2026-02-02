@@ -11,7 +11,7 @@ public class BuildingsSidePanel : SidePanel
     public BuildingsSidePanel(IBuildingService buildingService)
     {
         _buildingService = buildingService;
-        _buildingNames = ["MilitaryBase", "PowerPlant", "Airport", "Port"];
+        _buildingNames = ["MilitaryBase", "PowerPlant", "ShipBuilder", "Airport", "Port"];
         _buildingService.OnBuildingModeChanged += (s, e) =>
         {
             _selectedIndex = -1;
