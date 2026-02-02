@@ -2,7 +2,7 @@
 
 public class SidePanel
 {
-    public bool IsActive { get; set; }
+    public bool IsActive { get; set; } = true;
 
     public void Update(float delta)
     {
@@ -26,10 +26,35 @@ public class SidePanel
             return;
         }
 
-        DrawContent();
+        var width = Raylib.GetScreenWidth();
+        var height = Raylib.GetScreenHeight();
+
+        const int Margin = 8;
+        const int PanelWidth = 480;
+        const int Border = 8;
+
+        Raylib.DrawRectangle(
+            Margin + width - PanelWidth,
+            Margin,
+            PanelWidth - 2 * Margin,
+            height - 2 * Margin,
+            Color.DarkGray);
+
+        Raylib.DrawRectangle(
+            width - PanelWidth + Border + Margin,
+            Border + Margin,
+            PanelWidth - Border * 2 - 2 * Margin,
+            height - Border * 2 - 2 * Margin,
+            Color.LightGray);
+
+        DrawContent(
+            width - PanelWidth + Border + Margin,
+            Border + Margin,
+            PanelWidth - Border * 2 - 2 * Margin,
+            height - Border * 2 - 2 * Margin);
     }
 
-    protected virtual void DrawContent()
+    protected virtual void DrawContent(int x, int y, int width, int height)
     {
 
     }

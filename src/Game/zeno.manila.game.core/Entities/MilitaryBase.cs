@@ -5,4 +5,5 @@ public sealed class MilitaryBase : IEntity
     public Guid Id { get; set; } = Guid.NewGuid();
     public Guid PrototypeId { get; set; }
     public string? Name { get; set; } = "Military Base";
+    public int Tier { get; set; } = 1;
 }

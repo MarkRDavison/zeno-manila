@@ -7,19 +7,45 @@ public sealed class ManilaGameRenderer
     private readonly IGameUserInteractionService _userInteractionService;
     private readonly ITeamService _teamService;
     private readonly ITurnService _turnService;
+    private readonly IBuildingService _buildingService;
 
-    private SidePanel? _sidePanel;
+    private SidePanel? _activeSidePanel;
+
+    private BuildingsSidePanel _buildingsSidePanel;
+    private RelatedEntitySidePanel _relatedEntitySidePanel;
 
     public ManilaGameRenderer(
         ManilaGameData gameData,
         IGameUserInteractionService userInteractionService,
         ITeamService teamService,
-        ITurnService turnService)
+        ITurnService turnService,
+        IBuildingService buildingService)
     {
         _gameData = gameData;
         _userInteractionService = userInteractionService;
         _teamService = teamService;
         _turnService = turnService;
+        _buildingService = buildingService;
+
+        _buildingsSidePanel = new();
+        _relatedEntitySidePanel = new();
+
+        _buildingService.OnBuildingModeChanged += (s, e) => { 
+            if (_buildingService.IsBuildingModeActive)
+            {
+                _buildingsSidePanel.IsActive = true;
+                _activeSidePanel = _buildingsSidePanel;
+            }
+            else if (_activeSidePanel == _buildingsSidePanel)
+            {
+                _buildingsSidePanel.IsActive = false;
+                _activeSidePanel = null;
+            }
+            else
+            {
+                _buildingsSidePanel.IsActive = false;
+            }
+        };
     }
 
     public void Update(float delta)
@@ -29,9 +55,9 @@ public sealed class ManilaGameRenderer
             _showDebug = !_showDebug;
         }
 
-        if (_sidePanel is not null)
+        if (_activeSidePanel is not null)
         {
-            _sidePanel.Update(delta);
+            _activeSidePanel.Update(delta);
         }
     }
 
@@ -90,6 +116,11 @@ public sealed class ManilaGameRenderer
 
         if (_userInteractionService.ActiveTile is { } activeTile)
         {
+            if (_activeSidePanel is not null)
+            {
+                _activeSidePanel.IsActive = false;
+            }
+
             Raylib.DrawRectangleLinesEx(
                 new Rectangle(
                     new Vector2(
@@ -106,17 +137,18 @@ public sealed class ManilaGameRenderer
             {
                 if (sprawl is not null && sprawl.RelatedEntity is { } entity)
                 {
-                    _sidePanel ??= new RelatedEntitySidePanel();
-                    if (_sidePanel is RelatedEntitySidePanel resp)
+                    _activeSidePanel = _relatedEntitySidePanel;
+                    if (_activeSidePanel is RelatedEntitySidePanel resp)
                     {
                         resp.SetRelatedEntity(entity);
+                        _activeSidePanel.IsActive = true;
                     }
                 }
             }
         }
-        else
+        else if (_activeSidePanel == _relatedEntitySidePanel)
         {
-            _sidePanel = null;
+            _activeSidePanel = null;
         }
 
         Raylib.EndMode2D();
@@ -217,9 +249,9 @@ public sealed class ManilaGameRenderer
             resources.ForEach(renderResource);
         }
 
-        if (_sidePanel is not null)
+        if (_activeSidePanel is not null)
         {
-            _sidePanel.Draw();
+            _activeSidePanel.Draw();
         }
     }
 }

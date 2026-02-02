@@ -7,4 +7,6 @@ public interface IBuildingService
     void SetBuildingType(string buildingType);
     bool CanPlaceActiveBuildingAtTile(int x, int y, int teamNumber);
     bool PlaceActiveBuildingAtTile(int x, int y, int teamNumber);
+
+    EventHandler OnBuildingModeChanged { get; set; }
 }

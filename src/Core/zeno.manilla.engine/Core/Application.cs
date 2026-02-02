@@ -24,13 +24,12 @@ public class Application
         //var height = Raylib.GetMonitorHeight(monitor);
 
         //Raylib.SetWindowSize(width, height);
-        Raylib.SetExitKey(0);
-        Raylib.SetExitKey(KeyboardKey.Null);
         Raylib.SetConfigFlags(ConfigFlags.VSyncHint);
         Raylib.SetConfigFlags(ConfigFlags.ResizableWindow);
         Raylib.InitWindow(1440, 900, title);
         Raylib.InitAudioDevice();
         Raylib.SetWindowIcon(Raylib.LoadImage("Assets/Textures/icon.png"));
+        Raylib.SetExitKey(KeyboardKey.Null);
 
         await Task.CompletedTask;
     }
@@ -42,7 +41,7 @@ public class Application
 
     public Task Start(CancellationToken token)
     {
-        while (!Raylib.WindowShouldClose()) // Detect window close button or ESC key
+        while (!Raylib.WindowShouldClose())
         {
             if (token.IsCancellationRequested)
             {

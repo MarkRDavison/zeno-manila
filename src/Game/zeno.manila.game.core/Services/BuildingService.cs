@@ -12,6 +12,7 @@ internal sealed class BuildingService : IBuildingService
     }
 
     public bool IsBuildingModeActive { get; private set; }
+    public EventHandler OnBuildingModeChanged { get; set; } = default!;
 
     public bool CanPlaceActiveBuildingAtTile(int x, int y, int teamNumber)
     {
@@ -73,6 +74,7 @@ internal sealed class BuildingService : IBuildingService
     public void SetBuildingModeActiveState(bool active)
     {
         IsBuildingModeActive = active;
+        OnBuildingModeChanged?.Invoke(this, EventArgs.Empty);
     }
 
     public void SetBuildingType(string buildingType)
