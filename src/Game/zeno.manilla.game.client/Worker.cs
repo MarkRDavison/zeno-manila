@@ -1,5 +1,7 @@
-﻿using zeno.manila.game.core.Entities.Buildings;
+﻿using zeno.manila.game.core;
+using zeno.manila.game.core.Entities.Buildings;
 using zeno.manila.game.Prototype;
+using zeno.manilla.engine.Utility;
 
 namespace zeno.manilla.game.client;
 
@@ -54,13 +56,16 @@ public class Worker<TStartScene> : BackgroundService
                 "PowerPlant",
                 new BuildingPrototype
                 {
+                    Id = StringHash.Hash("PowerPlant"),
                     Name = "Power Plant",
-                    ValidTiles = [TileType.Land]
+                    ValidTiles = [TileType.Land],
+                    ActiveResources = { { ManilaConstants.Resource_Power, 80 } }
                 });
             buildingPrototypes.RegisterPrototype(
                 "MilitaryBase",
                 new BuildingPrototype
                 {
+                    Id = StringHash.Hash("MilitaryBase"),
                     Name = "Military Base",
                     ValidTiles = [TileType.Land]
                 });
@@ -68,6 +73,7 @@ public class Worker<TStartScene> : BackgroundService
                 "ShipBuilder",
                 new BuildingPrototype
                 {
+                    Id = StringHash.Hash("ShipBuilder"),
                     Name = "Ship Builder",
                     ValidTiles = [TileType.Shore]
                 });

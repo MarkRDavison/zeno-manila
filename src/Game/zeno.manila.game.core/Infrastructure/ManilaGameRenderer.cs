@@ -110,7 +110,9 @@ public sealed class ManilaGameRenderer
                 Color.White);
         }
 
-        if (_buildingService.IsBuildingModeActive && _buildingService.HasSelectedBuilding && _userInteractionService.GetTileCoordsAtCursor() is { } tileCoords)
+        if (_buildingService.IsBuildingModeActive &&
+            _buildingService.HasSelectedBuilding &&
+            _userInteractionService.GetTileCoordsAtCursor() is { } tileCoords)
         {
             var canPlace = _buildingService.CanPlaceActiveBuildingAtTile((int)tileCoords.X, (int)tileCoords.Y, _turnService.GetCurrentTeamTurn());
 

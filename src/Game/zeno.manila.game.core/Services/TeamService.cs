@@ -33,6 +33,13 @@ internal sealed class TeamService : ITeamService
 
     public Color GetTeamColor(int teamNumber) => _teams[teamNumber - 1].Color;
 
+    public void SetResourceAmount(int teamNumber, string resource, int amount)
+    {
+        var resources = _teams[teamNumber - 1].Resources;
+
+        resources[resource] = amount;
+    }
+
     public int GetResourceAmount(int teamNumber, string resource)
     {
         var resources = _teams[teamNumber - 1].Resources;

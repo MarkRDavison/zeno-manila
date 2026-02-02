@@ -4,15 +4,18 @@ internal sealed class BuildingService : IBuildingService
 {
     private readonly ManilaGameData _data;
     private readonly IPrototypeService<BuildingPrototype, Building> _buildingPrototypeService;
+    private readonly ITeamService _teamService;
 
     private string _activeBuildingType = string.Empty;
 
     public BuildingService(
         ManilaGameData data,
-        IPrototypeService<BuildingPrototype, Building> buildingPrototypeService)
+        IPrototypeService<BuildingPrototype, Building> buildingPrototypeService,
+        ITeamService teamService)
     {
         _data = data;
         _buildingPrototypeService = buildingPrototypeService;
+        _teamService = teamService;
     }
 
     public bool IsBuildingModeActive { get; private set; }
@@ -82,6 +85,13 @@ internal sealed class BuildingService : IBuildingService
         {
             CreatedManually = true
         });
+
+        var prototype = _buildingPrototypeService.GetPrototype(sprawl.RelatedEntity.PrototypeId);
+
+        foreach (var r in prototype.ActiveResources)
+        {
+            _teamService.SetResourceAmount(teamNumber, r.Key, r.Value + _teamService.GetResourceAmount(teamNumber, r.Key));
+        }
 
         return true;
     }

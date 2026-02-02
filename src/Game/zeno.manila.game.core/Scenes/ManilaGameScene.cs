@@ -53,7 +53,9 @@ public sealed class ManilaGameScene : IScene
 
     public void Update(float delta)
     {
+        // TODO: Update the UI here to prevent bubbling events etc
         _camera.Update(delta);
+
         _gameUserInteractionService.Update();
 
         var startTurnNumber = _turnService.CurrentTurnNumber;
