@@ -22,13 +22,16 @@ internal sealed class CityPopulationService : ICityPopulationService
         }
     }
 
-    private void HandleCitySprawl(City city)
+    public void Init()
     {
-        if (city.LastSprawlIncreaseTurnNumber + MinTurnsForSprawlIncrease > _data.CurrentTurnNumber)
+        foreach (var city in _data.Cities)
         {
-            return;
+            while (UpdateCitySprawl(city)) { }
         }
+    }
 
+    private bool UpdateCitySprawl(City city)
+    {
         var expectedSprawlForPopulation = CalculateExpectedSprawlForPopulation(city);
 
         if (expectedSprawlForPopulation > city.SprawlCount)
@@ -50,7 +53,21 @@ internal sealed class CityPopulationService : ICityPopulationService
                 tile.OwningTeam = city.TeamNumber;
             }
 
+            return true;
+
         }
+
+        return false;
+    }
+
+    private void HandleCitySprawl(City city)
+    {
+        if (city.LastSprawlIncreaseTurnNumber + MinTurnsForSprawlIncrease > _data.CurrentTurnNumber)
+        {
+            return;
+        }
+
+        UpdateCitySprawl(city);
     }
 
     // TODO: This works, but very inorganic, expands like a square, change to circle?

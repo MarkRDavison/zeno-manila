@@ -71,6 +71,8 @@ public sealed class ManilaGame
                 }
             }
         }
+
+        _cityPopulationService.Init();
     }
 
     public void Update(float delta)
