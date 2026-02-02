@@ -6,4 +6,5 @@ public interface ITurnService
     void EndCurrentTurn();
     bool IsEndTurnProcessing { get; }
     int CurrentTurnNumber { get; }
+    bool IsPlayerTurn { get; }
 }

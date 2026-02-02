@@ -27,4 +27,5 @@ internal sealed class TurnService : ITurnService
 
     public bool IsEndTurnProcessing { get; private set; }
     public int CurrentTurnNumber => _data.CurrentTurnNumber;
+    public bool IsPlayerTurn => _teamService.IsTeamPlayable(GetCurrentTeamTurn());
 }

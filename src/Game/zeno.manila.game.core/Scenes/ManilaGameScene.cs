@@ -9,6 +9,8 @@ public sealed class ManilaGameScene : IScene
     private readonly ITurnService _turnService;
     private JsonSerializerOptions? _options;
 
+    private int _autoTurnDelay = 30;
+
     public ManilaGameScene(
         ManilaGameCamera camera,
         ManilaGame game,
@@ -54,9 +56,28 @@ public sealed class ManilaGameScene : IScene
         _camera.Update(delta);
         _gameUserInteractionService.Update();
 
-        if (Raylib.IsKeyPressed(KeyboardKey.Enter))
+        var startTurnNumber = _turnService.CurrentTurnNumber;
+
+        // TODO: Move this to within game user interaction service?
+        // Or something like orchestration? for different phases of a turn/round
+        if (_turnService.IsPlayerTurn && Raylib.IsKeyPressed(KeyboardKey.Enter))
         {
             _turnService.EndCurrentTurn();
+        }
+        else if (!_turnService.IsPlayerTurn)
+        {
+            if (_autoTurnDelay-- < 0)
+            {
+                Console.WriteLine("Auto playing player {0}'s turn", _turnService.GetCurrentTeamTurn());
+                _turnService.EndCurrentTurn();
+                _autoTurnDelay = 30;
+            }
+        }
+
+        if (startTurnNumber != _turnService.CurrentTurnNumber)
+        {
+            Console.WriteLine("Turn {0} is over.", startTurnNumber);
+            _game.UpdateEndRound();
         }
 
         _game.Update(delta);

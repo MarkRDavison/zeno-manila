@@ -2,7 +2,7 @@
 
 public sealed class ManilaGameRenderer
 {
-    private bool _showDebug = true;
+    private bool _showDebug;
     private readonly ManilaGameData _gameData;
     private readonly IGameUserInteractionService _userInteractionService;
     private readonly ITeamService _teamService;
@@ -71,6 +71,7 @@ public sealed class ManilaGameRenderer
             {
                 if (sprawl.RelatedEntity is { } entity)
                 {
+                    // TODO: Draw something specific to the entity
                     Raylib.DrawCircle(
                         sprawl.X * TileSize + TileSize / 2,
                         sprawl.Y * TileSize + TileSize / 2,
@@ -129,12 +130,24 @@ public sealed class ManilaGameRenderer
                     Raylib.DrawText(string.Format("Owner: {0} ({1:0})", owner, tile.OwningTeam), 10, yInfoOffset, 32, Color.Black);
                 }
 
-                var (city, sprawl) = _gameData.GetCityAndSprawlAtTile((int)activeTile2.X, (int)activeTile2.Y);
-
-                if (city is not null && sprawl is not null && sprawl.RelatedEntity is { } entity)
+                var cityCity = _gameData.GetCityAtTile((int)activeTile2.X, (int)activeTile2.Y);
+                if (cityCity is not null)
                 {
                     yInfoOffset += 32;
-                    Raylib.DrawText(string.Format("Related entity: {0}", entity.Id), 10, yInfoOffset, 32, Color.Black);
+                    Raylib.DrawText(string.Format("City pop: {0}", cityCity.Population), 10, yInfoOffset, 32, Color.Black);
+                }
+
+                var (city, sprawl) = _gameData.GetCityAndSprawlAtTile((int)activeTile2.X, (int)activeTile2.Y);
+
+                if (city is not null)
+                {
+                    yInfoOffset += 32;
+                    Raylib.DrawText(string.Format("City pop: {0}", city.Population), 10, yInfoOffset, 32, Color.Black);
+                    if (sprawl is not null && sprawl.RelatedEntity is { } entity)
+                    {
+                        yInfoOffset += 32;
+                        Raylib.DrawText(string.Format("Related entity: {0}", entity.Id), 10, yInfoOffset, 32, Color.Black);
+                    }
                 }
 
                 yInfoOffset += 32;

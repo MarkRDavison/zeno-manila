@@ -10,6 +10,7 @@ internal sealed class TeamService : ITeamService
         [
             new TeamInfo
             {
+                IsPlayerTeam = true,
                 Color = Color.Red,
                 Name = "Team One"
             },
@@ -43,4 +44,5 @@ internal sealed class TeamService : ITeamService
 
         return 0;
     }
+    public bool IsTeamPlayable(int teamNumber) => _teams[teamNumber - 1].IsPlayerTeam;
 }

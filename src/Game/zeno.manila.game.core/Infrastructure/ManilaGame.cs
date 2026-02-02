@@ -66,13 +66,18 @@ public sealed class ManilaGame
                         X = x,
                         Y = y,
                         TeamNumber = owningTeam,
-                        Population = 10_000
+                        Population = 8_000 + Random.Shared.Next(0, 4000)
                     });
                 }
             }
         }
 
         _cityPopulationService.Init();
+    }
+
+    public void UpdateEndRound()
+    {
+        _cityPopulationService.UpdateEndRound();
     }
 
     public void Update(float delta)

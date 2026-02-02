@@ -15,11 +15,22 @@ internal sealed class CityPopulationService : ICityPopulationService
     {
         foreach (var city in _data.Cities)
         {
-            // TODO:
-            // HandleCityPopGrowth(city);
-
             HandleCitySprawl(city);
         }
+    }
+
+    public void UpdateEndRound()
+    {
+        foreach (var city in _data.Cities)
+        {
+            HandleCityPopGrowth(city);
+            HandleCitySprawl(city);
+        }
+    }
+
+    private void HandleCityPopGrowth(City city)
+    {
+        city.Population = (int)(((float)(city.Population)) * 1.05f);
     }
 
     public void Init()

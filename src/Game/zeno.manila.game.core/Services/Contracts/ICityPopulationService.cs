@@ -3,6 +3,7 @@
 public interface ICityPopulationService
 {
     void Update(float delta);
+    void UpdateEndRound();
 
     void Init();
 }

@@ -25,6 +25,11 @@ public sealed class ManilaGameData
         return GetSafeTile(x, y);
     }
 
+    public City? GetCityAtTile(int x, int y)
+    {
+        return Cities.FirstOrDefault(_ => _.X == x && _.Y == y);
+    }
+
     public (City?, CitySprawl?) GetCityAndSprawlAtTile(int x, int y)
     {
         var city = Cities.FirstOrDefault(c => c.Sprawl.FirstOrDefault(_ => _.X == x && _.Y == y) is not null);
