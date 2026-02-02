@@ -67,20 +67,16 @@ internal sealed class BuildingService : IBuildingService
             Id = Guid.NewGuid()
         };
 
-        Console.WriteLine("Added {0} at {1},{2}", _activeBuildingType, x, y);
-
         return true;
     }
 
     public void SetBuildingModeActiveState(bool active)
     {
-        Console.WriteLine("SetBuildingModeActiveStateL {0}", active);
         IsBuildingModeActive = active;
     }
 
     public void SetBuildingType(string buildingType)
     {
-        Console.WriteLine("SetBuildingType: {0}", buildingType);
         _activeBuildingType = buildingType;
     }
 }

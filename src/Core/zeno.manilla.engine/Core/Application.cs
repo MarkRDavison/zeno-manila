@@ -49,7 +49,7 @@ public class Application
                 break;
             }
 
-            CurrentScene?.Update(1.0f / 60.0f);// Raylib.GetFrameTime());
+            CurrentScene?.Update(Raylib.GetFrameTime());
 
             CurrentScene?.Draw();
         }

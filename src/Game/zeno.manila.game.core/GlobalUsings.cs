@@ -2,13 +2,13 @@
 global using Raylib_cs;
 global using System.Numerics;
 global using System.Text.Json;
+global using zeno.manila.game.core.Components;
 global using zeno.manila.game.core.Entities;
 global using zeno.manila.game.core.Infrastructure;
 global using zeno.manila.game.core.Models;
 global using zeno.manila.game.core.Scenes;
 global using zeno.manila.game.core.Services;
 global using zeno.manila.game.core.Services.Contracts;
-global using zeno.manila.game.ECS.Systems;
 global using zeno.manila.game.Prototype;
 global using zeno.manilla.engine.Converters;
 global using zeno.manilla.engine.Core;

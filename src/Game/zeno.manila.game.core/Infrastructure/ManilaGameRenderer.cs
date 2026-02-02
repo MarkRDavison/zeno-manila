@@ -8,6 +8,8 @@ public sealed class ManilaGameRenderer
     private readonly ITeamService _teamService;
     private readonly ITurnService _turnService;
 
+    private SidePanel? _sidePanel;
+
     public ManilaGameRenderer(
         ManilaGameData gameData,
         IGameUserInteractionService userInteractionService,
@@ -25,6 +27,11 @@ public sealed class ManilaGameRenderer
         if (Raylib.IsKeyPressed(KeyboardKey.F3))
         {
             _showDebug = !_showDebug;
+        }
+
+        if (_sidePanel is not null)
+        {
+            _sidePanel.Update(delta);
         }
     }
 
@@ -91,6 +98,25 @@ public sealed class ManilaGameRenderer
                     new Vector2(TileSize, TileSize)),
                 2.0f / camera.Zoom,
                 Color.White);
+
+            // TODO: PERF: Keep 1 of each panel type and just assign it as appropriate?
+            var (city, sprawl) = _gameData.GetCityAndSprawlAtTile((int)activeTile.X, (int)activeTile.Y);
+
+            if (city is not null)
+            {
+                if (sprawl is not null && sprawl.RelatedEntity is { } entity)
+                {
+                    _sidePanel ??= new RelatedEntitySidePanel();
+                    if (_sidePanel is RelatedEntitySidePanel resp)
+                    {
+                        resp.SetRelatedEntity(entity);
+                    }
+                }
+            }
+        }
+        else
+        {
+            _sidePanel = null;
         }
 
         Raylib.EndMode2D();
@@ -103,7 +129,6 @@ public sealed class ManilaGameRenderer
 
         if (_showDebug)
         {
-
             Raylib.DrawText(string.Format("Turn: {0:0}", _turnService.CurrentTurnNumber), 10, yInfoOffset, 32, Color.Black);
             yInfoOffset += 32;
             Raylib.DrawText(string.Format("Camera: {0:0},{1:0}", camera.Target.X, camera.Target.Y), 10, yInfoOffset, 32, Color.Black);
@@ -146,7 +171,7 @@ public sealed class ManilaGameRenderer
                     if (sprawl is not null && sprawl.RelatedEntity is { } entity)
                     {
                         yInfoOffset += 32;
-                        Raylib.DrawText(string.Format("Related entity: {0}", entity.Id), 10, yInfoOffset, 32, Color.Black);
+                        Raylib.DrawText(string.Format("Related entity: {0}", entity.Name), 10, yInfoOffset, 32, Color.Black);
                     }
                 }
 
@@ -170,10 +195,31 @@ public sealed class ManilaGameRenderer
         {   //  Resources
             yInfoOffset = screenHeight - 8 - 32;
 
-            var credits = _teamService.GetResourceAmount(currentTeam, "Credits");
+            var renderResource = (string resource) =>
+            {
+                // TODO: Format using k for 1,000's, m for 1,000,000's etc
+                var res = _teamService.GetResourceAmount(currentTeam, resource);
+                Raylib.DrawText(string.Format("{0}: {1:0}", resource, res), 10, yInfoOffset, 32, Color.Black);
+                yInfoOffset -= 32;
+            };
 
-            Raylib.DrawText(string.Format("Credits : {0:0}", credits), 10, yInfoOffset, 32, Color.Black);
-            yInfoOffset -= 32;
+            List<string> resources =
+            [
+                ManilaConstants.Resource_Credits,
+                ManilaConstants.Resource_Power,
+                ManilaConstants.Resource_Food,
+                ManilaConstants.Resource_Materials,
+                ManilaConstants.Resource_Electronics,
+                ManilaConstants.Resource_Fuel,
+                ManilaConstants.Resource_Explosives
+            ];
+
+            resources.ForEach(renderResource);
+        }
+
+        if (_sidePanel is not null)
+        {
+            _sidePanel.Draw();
         }
     }
 }

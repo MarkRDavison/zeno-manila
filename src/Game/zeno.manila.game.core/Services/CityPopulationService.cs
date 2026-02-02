@@ -10,13 +10,9 @@ internal sealed class CityPopulationService : ICityPopulationService
         _data = data;
     }
 
-    // TODO: Need a way to initialise this process, give city with no sprawl and X pop run until stable
     public void Update(float delta)
     {
-        foreach (var city in _data.Cities)
-        {
-            HandleCitySprawl(city);
-        }
+
     }
 
     public void UpdateEndRound()
@@ -30,7 +26,8 @@ internal sealed class CityPopulationService : ICityPopulationService
 
     private void HandleCityPopGrowth(City city)
     {
-        city.Population = (int)(((float)(city.Population)) * 1.05f);
+        // TODO: More complicated based on needs met/unmet
+        city.Population = (int)(city.Population * 1.05f);
     }
 
     public void Init()

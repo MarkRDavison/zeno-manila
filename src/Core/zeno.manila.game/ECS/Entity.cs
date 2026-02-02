@@ -8,6 +8,7 @@ public class Entity : IEntity
 
     public Guid Id { get; set; } = Guid.NewGuid();
     public Guid PrototypeId { get; set; }
+    public string? Name { get; set; }
 
     public void Add<TC>(TC component)
     {

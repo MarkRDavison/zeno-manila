@@ -7,6 +7,8 @@ public sealed class TeamInfo
     public Color Color { get; set; } = Color.White;
     public Dictionary<string, int> Resources { get; set; } = new()
     {
-        {"Credits", 1000}
+        { ManilaConstants.Resource_Credits, 1000 },
+        { ManilaConstants.Resource_Food, 500 },
+        { ManilaConstants.Resource_Fuel, 200 }
     };
 }
