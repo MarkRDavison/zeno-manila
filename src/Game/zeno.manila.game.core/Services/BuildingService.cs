@@ -49,6 +49,11 @@ internal sealed class BuildingService : IBuildingService
             return false;
         }
 
+        if (!_teamService.CanAfford(teamNumber, prototype.Cost))
+        {
+            return false;
+        }
+
         var (city, sprawl) = _data.GetCityAndSprawlAtTile(x, y);
 
         if (city is null || sprawl is null)
@@ -80,14 +85,21 @@ internal sealed class BuildingService : IBuildingService
 
         sprawl.RelatedEntity = _buildingPrototypeService.CreateEntity(_activeBuildingType);
 
-        SetBuildingModeActiveState(false);
-        OnBuildingCreated?.Invoke(this, new BuildingCreatedEventArgs(x, y)
+        OnBuildingCreated?.Invoke(this, new BuildingCreatedEventArgs(x, y, _activeBuildingType)
         {
             CreatedManually = true
         });
 
-        var prototype = _buildingPrototypeService.GetPrototype(sprawl.RelatedEntity.PrototypeId);
+        var prototype = _buildingPrototypeService.GetPrototype(_activeBuildingType);
 
+        SetBuildingModeActiveState(false);
+
+        // TODO: Should this be subscribed in OnBuildingCreated?
+
+        foreach (var (r, a) in prototype.Cost)
+        {
+            _teamService.SetResourceAmount(teamNumber, r, _teamService.GetResourceAmount(teamNumber, r) - a);
+        }
         foreach (var r in prototype.ActiveResources)
         {
             _teamService.SetResourceAmount(teamNumber, r.Key, r.Value + _teamService.GetResourceAmount(teamNumber, r.Key));

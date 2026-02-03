@@ -9,6 +9,7 @@ public class WorldTile
     {
         TileType.Land => Color.Green,
         TileType.Water => Color.Blue,
+        TileType.Shore => Color.Orange,
         TileType.Edge => Color.Black,
         TileType.Unset => Color.Magenta,
         _ => Color.Magenta

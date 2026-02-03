@@ -8,4 +8,5 @@ public interface ITeamService
     void SetResourceAmount(int teamNumber, string resource, int amount);
     int GetResourceAmount(int teamNumber, string resource);
     bool IsTeamPlayable(int teamNumber);
+    bool CanAfford(int teamNumber, Dictionary<string, int> resources);
 }

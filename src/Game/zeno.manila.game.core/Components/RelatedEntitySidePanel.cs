@@ -3,6 +3,13 @@
 public class RelatedEntitySidePanel : SidePanel
 {
     private IEntity? _entity;
+    private readonly IPrototypeService<BuildingPrototype, Building> _buildingPrototypeService;
+
+    public RelatedEntitySidePanel(
+        IPrototypeService<BuildingPrototype, Building> buildingPrototypeService)
+    {
+        _buildingPrototypeService = buildingPrototypeService;
+    }
 
     public void SetRelatedEntity(IEntity? entity)
     {
@@ -16,6 +23,7 @@ public class RelatedEntitySidePanel : SidePanel
             return;
         }
 
+        // TODO: Cache drawing method?
         int xOffset = x + 8;
         int yOffset = y + 8;
 
@@ -26,5 +34,16 @@ public class RelatedEntitySidePanel : SidePanel
         }
 
         drawAndOffset(_entity.Name ?? string.Empty, 32);
+
+        var prototype = _buildingPrototypeService.GetPrototype(_entity.PrototypeId);
+
+        if (prototype.ActiveResources.Count is not 0)
+        {
+            drawAndOffset("Provides:", 24);
+            foreach (var res in prototype.ActiveResources)
+            {
+                drawAndOffset($" - {res.Key}: {res.Value:0}", 24);
+            }
+        }
     }
 }

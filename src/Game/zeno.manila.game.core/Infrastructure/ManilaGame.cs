@@ -42,6 +42,10 @@ public sealed class ManilaGame
                 {
                     tileType = TileType.Water;
                 }
+                else if (imageColor.Equals(new Color(255, 255, 0)))
+                {
+                    tileType = TileType.Shore;
+                }
 
                 var owningTeam = 0;
 

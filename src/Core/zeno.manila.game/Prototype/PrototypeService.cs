@@ -17,7 +17,15 @@ public abstract class PrototypeService<TPrototype, TEntity> : IPrototypeService<
     public void RegisterPrototype(Guid prototypeId, TPrototype prototype) => _prototypes.Add(prototypeId, prototype);
 
     public TPrototype GetPrototype(string prototypeName) => GetPrototype(StringHash.Hash(prototypeName));
-    public TPrototype GetPrototype(Guid prototypeId) => _prototypes[prototypeId];
+    public TPrototype GetPrototype(Guid prototypeId)
+    {
+        if (_prototypes.TryGetValue(prototypeId, out var prototype))
+        {
+            return prototype;
+        }
+
+        throw new InvalidOperationException(string.Format("Could not find prototype by id {0}", GetNameFromId(prototypeId)));
+    }
 
     public TEntity CreateEntity(string prototypeName) => CreateEntity(StringHash.Hash(prototypeName));
     public TEntity CreateEntity(Guid prototypeId) => CreateEntity(GetPrototype(prototypeId));

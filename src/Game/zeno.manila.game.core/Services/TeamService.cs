@@ -51,5 +51,26 @@ internal sealed class TeamService : ITeamService
 
         return 0;
     }
+
     public bool IsTeamPlayable(int teamNumber) => _teams[teamNumber - 1].IsPlayerTeam;
+
+    public bool CanAfford(int teamNumber, Dictionary<string, int> resources)
+    {
+        var r = _teams[teamNumber - 1].Resources;
+
+        foreach (var (n, a) in resources)
+        {
+            if (!r.TryGetValue(n, out var rAmount))
+            {
+                return false;
+            }
+
+            if (rAmount < a)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

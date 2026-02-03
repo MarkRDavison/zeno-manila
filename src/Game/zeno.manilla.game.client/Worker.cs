@@ -59,7 +59,11 @@ public class Worker<TStartScene> : BackgroundService
                     Id = StringHash.Hash("PowerPlant"),
                     Name = "Power Plant",
                     ValidTiles = [TileType.Land],
-                    ActiveResources = { { ManilaConstants.Resource_Power, 80 } }
+                    ActiveResources = { { ManilaConstants.Resource_Power, 80 } },
+                    Cost = {
+                        { ManilaConstants.Resource_Credits, 200 },
+                        { ManilaConstants.Resource_Electronics, 20 },
+                    }
                 });
             buildingPrototypes.RegisterPrototype(
                 "MilitaryBase",
@@ -67,7 +71,11 @@ public class Worker<TStartScene> : BackgroundService
                 {
                     Id = StringHash.Hash("MilitaryBase"),
                     Name = "Military Base",
-                    ValidTiles = [TileType.Land]
+                    ValidTiles = [TileType.Land],
+                    Cost = {
+                        { ManilaConstants.Resource_Credits, 200 },
+                        { ManilaConstants.Resource_Power, 20 },
+                    }
                 });
             buildingPrototypes.RegisterPrototype(
                 "ShipBuilder",

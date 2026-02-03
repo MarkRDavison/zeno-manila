@@ -2,16 +2,30 @@
 
 public class BuildingsSidePanel : SidePanel
 {
+
+    private record BuildingInfo(string Name, Rectangle Bounds, bool CanAfford);
+
     private readonly List<string> _buildingNames;
-    private readonly List<Rectangle> _buildingBounds = [];
+    private readonly List<BuildingInfo> _buildings = [];
     private readonly IBuildingService _buildingService;
+    private readonly ITeamService _teamService;
+    private readonly ITurnService _turnService;
+    private readonly IPrototypeService<BuildingPrototype, Building> _buildingPrototypeService;
 
     private int _selectedIndex = -1;
 
-    public BuildingsSidePanel(IBuildingService buildingService)
+    public BuildingsSidePanel(
+        IBuildingService buildingService,
+        ITeamService teamService,
+        ITurnService turnService,
+        IPrototypeService<BuildingPrototype, Building> buildingPrototypeService)
     {
         _buildingService = buildingService;
-        _buildingNames = ["MilitaryBase", "PowerPlant", "ShipBuilder", "Airport", "Port"];
+        _teamService = teamService;
+        _turnService = turnService;
+        _buildingPrototypeService = buildingPrototypeService;
+
+        _buildingNames = [.. _buildingPrototypeService.GetPrototypes().Select(_ => _.Name)];
         _buildingService.OnBuildingModeChanged += (s, e) =>
         {
             _selectedIndex = -1;
@@ -20,19 +34,21 @@ public class BuildingsSidePanel : SidePanel
 
     protected override void UpdateContent(float delta)
     {
-        if (_buildingBounds.Count > 0)
+        if (_buildings.Count > 0)
         {
             if (Raylib.IsMouseButtonPressed(MouseButton.Left))
             {
                 var mouse = Raylib.GetMousePosition();
                 int i = 0;
-                foreach (var r in _buildingBounds)
+                foreach (var r in _buildings)
                 {
-                    if (r.X <= mouse.X && mouse.X <= r.X + r.Width &&
-                        r.Y <= mouse.Y && mouse.Y <= r.Y + r.Height)
+                    if (r.CanAfford &&
+                        r.Bounds.X <= mouse.X && mouse.X <= r.Bounds.X + r.Bounds.Width &&
+                        r.Bounds.Y <= mouse.Y && mouse.Y <= r.Bounds.Y + r.Bounds.Height)
                     {
                         _selectedIndex = i;
-                        _buildingService.SetBuildingType(_buildingNames[i]);
+                        // TODO: REPLACE WITH PASSING GUID THROUGH
+                        _buildingService.SetBuildingType(_buildingNames[i].Replace(" ", ""));
                         break;
                     }
 
@@ -59,11 +75,23 @@ public class BuildingsSidePanel : SidePanel
 
         yOffset += 8;
 
-        _buildingBounds.Clear();
+        _buildings.Clear();
         int index = 0;
         foreach (var b in _buildingNames)
         {
-            _buildingBounds.Add(drawAndOffset(b, 24, index == _selectedIndex ? Color.Yellow : Color.Black));
+            var prototype = _buildingPrototypeService.GetPrototypes().ElementAt(index);
+            var canAfford = _teamService.CanAfford(_turnService.GetCurrentTeamTurn(), prototype.Cost);
+
+            var color = index == _selectedIndex
+                ? Color.Yellow
+                : Color.Black;
+
+            if (canAfford is false)
+            {
+                color = Color.Red;
+            }
+
+            _buildings.Add(new BuildingInfo(b, drawAndOffset(b, 24, color), canAfford));
             yOffset += 4;
             index++;
         }
