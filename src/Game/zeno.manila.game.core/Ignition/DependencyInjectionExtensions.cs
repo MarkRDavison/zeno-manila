@@ -18,7 +18,8 @@ public static class DependencyInjectionExtensions
 
         services
             .AddScoped<BuildingsSidePanel>()
-            .AddScoped<RelatedEntitySidePanel>();
+            .AddScoped<RelatedEntitySidePanel>()
+            .AddScoped<IRelatedEntitySidePanel, MilitaryBaseRelatedEntitySidePanel>();
 
         services
             .AddScoped<ManilaGameCamera>()

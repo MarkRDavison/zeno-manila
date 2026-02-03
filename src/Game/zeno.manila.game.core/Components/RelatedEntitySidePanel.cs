@@ -11,9 +11,9 @@ public class RelatedEntitySidePanel : SidePanel
         _buildingPrototypeService = buildingPrototypeService;
     }
 
-    public void SetRelatedEntity(IEntity? entity)
+    public void SetRelatedEntity(IEntity? relatedEntity)
     {
-        _entity = entity;
+        _entity = relatedEntity;
     }
 
     protected override void DrawContent(int x, int y, int width, int height)
@@ -41,6 +41,15 @@ public class RelatedEntitySidePanel : SidePanel
         {
             drawAndOffset("Provides:", 24);
             foreach (var res in prototype.ActiveResources)
+            {
+                drawAndOffset($" - {res.Key}: {res.Value:0}", 24);
+            }
+        }
+
+        if (prototype.Production.Count is not 0)
+        {
+            drawAndOffset("Produces:", 24);
+            foreach (var res in prototype.Production)
             {
                 drawAndOffset($" - {res.Key}: {res.Value:0}", 24);
             }

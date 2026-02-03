@@ -29,6 +29,7 @@ internal sealed class ResourceProductionService : IResourceProductionService
 
             foreach (var (n, a) in prototype.Production)
             {
+                // TODO: Floating text
                 _teamService.SetResourceAmount(teamNumber, n, a + _teamService.GetResourceAmount(teamNumber, n));
             }
         }

@@ -67,10 +67,16 @@ internal class GameUserInteractionService : IGameUserInteractionService
                     {
                         if (_sidePanelService.GetActivePanel() is ManilaConstants.Panel_RelatedEntity or null)
                         {
-                            _sidePanelService.DisplayPanel(ManilaConstants.Panel_RelatedEntity);
+                            _sidePanelService.DisplayPanel(ManilaConstants.Panel_RelatedEntity, entity.Name ?? string.Empty);
                             if (_sidePanelService.ActiveSidePanel is RelatedEntitySidePanel resp)
                             {
                                 resp.SetRelatedEntity(entity);
+                                displayRelatedEntityPanel = true;
+                            }
+                            // TODO: MERGE THESE?
+                            if (_sidePanelService.ActiveSidePanel is IRelatedEntitySidePanel respi)
+                            {
+                                respi.SetRelatedEntity(entity);
                                 displayRelatedEntityPanel = true;
                             }
                         }
@@ -138,7 +144,7 @@ internal class GameUserInteractionService : IGameUserInteractionService
     private void ActivateBuildingMode()
     {
         _buildingService.SetBuildingModeActiveState(true);
-        _sidePanelService.DisplayPanel(ManilaConstants.Panel_Buildings);
+        _sidePanelService.DisplayPanel(ManilaConstants.Panel_Buildings, string.Empty);
     }
 
     private void DeactivateBuildingMode()

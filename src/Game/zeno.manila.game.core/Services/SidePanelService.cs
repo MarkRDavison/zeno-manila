@@ -8,16 +8,20 @@ public sealed class SidePanelService : ISidePanelService
     private readonly ManilaGameData _manilaGameData;
     private readonly IBuildingService _buildingService;
 
+    private readonly IList<IRelatedEntitySidePanel> _relatedEntitySidePanels;
+
     public SidePanelService(
         BuildingsSidePanel buildingsSidePanel,
         RelatedEntitySidePanel relatedEntitySidePanel,
         ManilaGameData manilaGameData,
-        IBuildingService buildingService)
+        IBuildingService buildingService,
+        IEnumerable<IRelatedEntitySidePanel> relatedEntitySidePanels)
     {
         _buildingsSidePanel = buildingsSidePanel;
         _relatedEntitySidePanel = relatedEntitySidePanel;
         _manilaGameData = manilaGameData;
         _buildingService = buildingService;
+        _relatedEntitySidePanels = [.. relatedEntitySidePanels];
 
         _buildingService.OnBuildingCreated += (s, e) =>
         {
@@ -30,7 +34,8 @@ public sealed class SidePanelService : ISidePanelService
 
             if (sprawl?.RelatedEntity is not null)
             {
-                DisplayPanel(ManilaConstants.Panel_RelatedEntity);
+                // TODO: Prototype id or something other than name
+                DisplayPanel(ManilaConstants.Panel_RelatedEntity, sprawl.RelatedEntity.Name ?? string.Empty);
                 _relatedEntitySidePanel.SetRelatedEntity(sprawl.RelatedEntity);
             }
         };
@@ -40,7 +45,7 @@ public sealed class SidePanelService : ISidePanelService
     public SidePanel? ActiveSidePanel { get; private set; }
     public EventHandler OnPanelChanged { get; set; } = default!;
 
-    public void DisplayPanel(string panel)
+    public void DisplayPanel(string panel, string metadata)
     {
         _activePanel = panel;
 
@@ -49,11 +54,23 @@ public sealed class SidePanelService : ISidePanelService
         ActiveSidePanel = panel switch
         {
             ManilaConstants.Panel_Buildings => _buildingsSidePanel,
-            ManilaConstants.Panel_RelatedEntity => _relatedEntitySidePanel,
+            ManilaConstants.Panel_RelatedEntity => GetRelatedEntitySidePanel(metadata),
             _ => throw new InvalidOperationException($"Trying to display an invalid panel: {panel}")
         };
 
         ActiveSidePanel.IsActive = true;
+    }
+
+    private SidePanel GetRelatedEntitySidePanel(string metadata)
+    {
+        // TODO: switch on specific related entity to display its own side panel???
+        if (_relatedEntitySidePanels.FirstOrDefault(_ => _.Metadata == metadata) is { } relataedEntitySidePanel &&
+            relataedEntitySidePanel is SidePanel sidePanel) // TODO: Bad casting
+        {
+            return sidePanel;
+        }
+
+        return _relatedEntitySidePanel;
     }
 
     public void ClearPanel()

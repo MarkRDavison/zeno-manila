@@ -30,7 +30,7 @@ public sealed class ManilaGameRenderer
             // TODO: Where should this be located???
             if (_buildingService.IsBuildingModeActive)
             {
-                _sidePanelService.DisplayPanel(ManilaConstants.Panel_Buildings);
+                _sidePanelService.DisplayPanel(ManilaConstants.Panel_Buildings, string.Empty);
             }
         };
     }
