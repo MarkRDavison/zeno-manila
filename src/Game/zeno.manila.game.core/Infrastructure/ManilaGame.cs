@@ -70,7 +70,7 @@ public sealed class ManilaGame
                         X = x,
                         Y = y,
                         TeamNumber = owningTeam,
-                        Population = 8_000 + Random.Shared.Next(0, 4000)
+                        Population = 10_000 + Random.Shared.Next(0, 4000)
                     });
                 }
             }

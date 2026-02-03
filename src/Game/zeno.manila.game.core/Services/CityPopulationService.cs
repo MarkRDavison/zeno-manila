@@ -24,7 +24,7 @@ internal sealed class CityPopulationService : ICityPopulationService
         }
     }
 
-    private void HandleCityPopGrowth(City city)
+    private static void HandleCityPopGrowth(City city)
     {
         // TODO: More complicated based on needs met/unmet
         city.Population = (int)(city.Population * 1.05f);
