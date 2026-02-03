@@ -163,9 +163,14 @@ internal sealed class CityPopulationService : ICityPopulationService
         return availableLocations.Skip(Random.Shared.Next(availableLocations.Count)).First();
     }
 
+    private static bool IsValidTileTypeForSprawl(TileType type)
+    {
+        return type is TileType.Land or TileType.Shore;
+    }
+
     private Vector2? ValidateCoordinates(int x, int y, int owningTeam)
     {
-        if (GetTile(x, y) is { } tile && tile.OwningTeam is 0 && tile.TileType is TileType.Land &&
+        if (GetTile(x, y) is { } tile && tile.OwningTeam is 0 && IsValidTileTypeForSprawl(tile.TileType) &&
             ((GetTile(x + 1, y) is { } r && r.OwningTeam == owningTeam) ||
             (GetTile(x - 1, y) is { } l && l.OwningTeam == owningTeam) ||
             (GetTile(x, y - 1) is { } u && u.OwningTeam == owningTeam) ||
@@ -201,6 +206,6 @@ internal sealed class CityPopulationService : ICityPopulationService
             pop /= 10;
         }
 
-        return pow;
+        return pow + 10;
     }
 }

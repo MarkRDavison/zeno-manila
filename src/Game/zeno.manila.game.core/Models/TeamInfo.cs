@@ -8,7 +8,6 @@ public sealed class TeamInfo
     public Dictionary<string, int> Resources { get; set; } = new()
     {
         { ManilaConstants.Resource_Credits, 1000 },
-        { ManilaConstants.Resource_Food, 500 },
         { ManilaConstants.Resource_Fuel, 200 },
         { ManilaConstants.Resource_Electronics, 200 },
         { ManilaConstants.Resource_Materials, 200 }

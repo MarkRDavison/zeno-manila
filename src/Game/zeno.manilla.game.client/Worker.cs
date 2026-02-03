@@ -78,12 +78,56 @@ public class Worker<TStartScene> : BackgroundService
                     }
                 });
             buildingPrototypes.RegisterPrototype(
+                "AirBase",
+                new BuildingPrototype
+                {
+                    Id = StringHash.Hash("AirBase"),
+                    Name = "Air Base",
+                    ValidTiles = [TileType.Land],
+                    Cost = {
+                        { ManilaConstants.Resource_Credits, 200 },
+                        { ManilaConstants.Resource_Power, 20 },
+                        { ManilaConstants.Resource_Electronics, 50 }
+                    }
+                });
+            buildingPrototypes.RegisterPrototype(
+                "ResourceExtractor",
+                new BuildingPrototype
+                {
+                    Id = StringHash.Hash("ResourceExtractor"),
+                    Name = "Resource Extractor",
+                    ValidTiles = [TileType.Land],
+                    Cost = {
+                        { ManilaConstants.Resource_Credits, 200 },
+                        { ManilaConstants.Resource_Power, 20 },
+                        { ManilaConstants.Resource_Electronics, 50 }
+                    },
+                    Production =
+                    {
+                        { ManilaConstants.Resource_Materials, 100 }
+                    }
+                });
+            buildingPrototypes.RegisterPrototype(
                 "ShipBuilder",
                 new BuildingPrototype
                 {
                     Id = StringHash.Hash("ShipBuilder"),
                     Name = "Ship Builder",
                     ValidTiles = [TileType.Shore]
+                });
+            buildingPrototypes.RegisterPrototype(
+                "Farm",
+                new BuildingPrototype
+                {
+                    Id = StringHash.Hash("Farm"),
+                    Name = "Farm",
+                    ValidTiles = [TileType.Land],
+                    ActiveResources = { { ManilaConstants.Resource_Food, 50 } },
+                    Cost = {
+                        { ManilaConstants.Resource_Credits, 200 },
+                        { ManilaConstants.Resource_Materials, 40 },
+                        { ManilaConstants.Resource_Power, 20 }
+                    }
                 });
         }
 

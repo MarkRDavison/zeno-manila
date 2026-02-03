@@ -83,7 +83,9 @@ internal sealed class BuildingService : IBuildingService
             return false;
         }
 
-        sprawl.RelatedEntity = _buildingPrototypeService.CreateEntity(_activeBuildingType);
+        var building = _buildingPrototypeService.CreateEntity(_activeBuildingType);
+        sprawl.RelatedEntity = building;
+        _data.Buildings.Add(building);
 
         OnBuildingCreated?.Invoke(this, new BuildingCreatedEventArgs(x, y, _activeBuildingType)
         {

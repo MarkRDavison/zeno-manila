@@ -4,11 +4,16 @@ public sealed class ManilaGame
 {
     private readonly ManilaGameData _data;
     private readonly ICityPopulationService _cityPopulationService;
+    private readonly IResourceProductionService _resourceProductionService;
 
-    public ManilaGame(ManilaGameData data, ICityPopulationService cityPopulationService)
+    public ManilaGame(
+        ManilaGameData data, 
+        ICityPopulationService cityPopulationService, 
+        IResourceProductionService resourceProductionService)
     {
         _data = data;
         _cityPopulationService = cityPopulationService;
+        _resourceProductionService = resourceProductionService;
     }
 
     public void Init(Image image, LevelFileData levelData)
@@ -82,6 +87,7 @@ public sealed class ManilaGame
     public void UpdateEndRound()
     {
         _cityPopulationService.UpdateEndRound();
+        _resourceProductionService.UpdateEndRound();
     }
 
     public void Update(float delta)

@@ -1,6 +1,4 @@
-﻿using zeno.manila.game.Prototype;
-
-namespace zeno.manila.game.ECS;
+﻿namespace zeno.manila.game.ECS;
 
 public class Entity : IEntity
 {

@@ -10,6 +10,7 @@ public sealed class ManilaGameData
     public int CurrentTurnNumber { get; set; }
 
     public List<City> Cities { get; } = [];
+    public List<Building> Buildings { get; } = [];
 
     public WorldTile GetSafeTile(int x, int y)
     {

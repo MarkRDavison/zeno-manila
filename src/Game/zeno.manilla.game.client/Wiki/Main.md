@@ -56,6 +56,13 @@
 	- roads/railways/airports
 	- military bases
 	- Search/extract resources
+	- Potential bonuses/penalties based on adjacency
+	- Can get bonuses based on what tile things are built on, resource mines over rich veins etc
+
+- Resources
+    - Things like power, that are a constant.  So its not a number that increases each turn then decreases
+	  - Food
+	- Things like materials, electronics etc, these are built from factories each turn and only consumed sometimes.
 
 - Manage trade
 	- Can have black market trading

@@ -7,4 +7,5 @@ public sealed class BuildingPrototype : IPrototype
     public HashSet<TileType> ValidTiles { get; set; } = [];
     public Dictionary<string, int> ActiveResources { get; set; } = []; // This can be negative
     public Dictionary<string, int> Cost { get; set; } = [];
+    public Dictionary<string, int> Production { get; set; } = [];
 }

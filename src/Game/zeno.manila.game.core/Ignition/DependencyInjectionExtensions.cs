@@ -10,7 +10,8 @@ public static class DependencyInjectionExtensions
             .AddScoped<ITurnService, TurnService>()
             .AddScoped<ICityPopulationService, CityPopulationService>()
             .AddScoped<IBuildingService, BuildingService>()
-            .AddScoped<ISidePanelService, SidePanelService>();
+            .AddScoped<ISidePanelService, SidePanelService>()
+            .AddScoped<IResourceProductionService, ResourceProductionService>();
 
         services
             .AddScoped<IPrototypeService<BuildingPrototype, Building>, BuildingPrototypeService>();
