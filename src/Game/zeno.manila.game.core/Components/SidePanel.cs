@@ -2,6 +2,9 @@
 
 public class SidePanel
 {
+    protected const int Margin = 8;
+    protected const int PanelWidth = 480;
+    protected const int Border = 8;
     public bool IsActive { get; set; } = true;
 
     public void Update(float delta)
@@ -28,10 +31,6 @@ public class SidePanel
 
         var width = Raylib.GetScreenWidth();
         var height = Raylib.GetScreenHeight();
-
-        const int Margin = 8;
-        const int PanelWidth = 480;
-        const int Border = 8;
 
         Raylib.DrawRectangle(
             Margin + width - PanelWidth,

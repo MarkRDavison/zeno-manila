@@ -60,6 +60,7 @@ public sealed class ManilaGameScene : IScene
     public void Update(float delta)
     {
         // TODO: Update the UI here to prevent bubbling events etc
+        _gameRenderer.Update(delta);
         _camera.Update(delta);
 
         _gameUserInteractionService.Update();
@@ -89,7 +90,6 @@ public sealed class ManilaGameScene : IScene
         }
 
         _game.Update(delta);
-        _gameRenderer.Update(delta);
         _inputManager.Update();
     }
 
