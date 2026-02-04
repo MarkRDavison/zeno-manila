@@ -1,4 +1,5 @@
 ﻿using zeno.manila.game.Components;
+using zeno.manilla.engine.Extensions;
 
 namespace zeno.manila.game.core.Components.RelatedEntities;
 
@@ -52,8 +53,9 @@ internal sealed class MilitaryBaseRelatedEntitySidePanel : BaseRelatedEntitySide
 
             var mousePos = _inputManager.GetMousePosition();
 
-            if (panelLeft <= mousePos.X && mousePos.X <= panelLeft + PanelWidth &&
-                panelTop <= mousePos.Y && mousePos.Y <= panelTop + panelHeight)
+            var panelBounds = new Rectangle(panelLeft, panelTop, PanelWidth, panelHeight);
+
+            if (panelBounds.Contains(mousePos))
             {
                 // TODO: TO BASE CLASS.... and helpers for getting position/bounds of panel, maybe get pos relative to panel? etc
                 _inputManager.MarkActionAsHandled(ManilaConstants.Action_Click);
