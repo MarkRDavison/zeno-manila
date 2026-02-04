@@ -7,24 +7,27 @@ internal class GameUserInteractionService : IGameUserInteractionService
     private readonly IBuildingService _buildingService;
     private readonly ITurnService _turnService;
     private readonly ISidePanelService _sidePanelService;
+    private readonly IInputManager _inputManager;
 
     public GameUserInteractionService(
         ManilaGameCamera manilaGameCamera,
         ManilaGameData gameData,
         IBuildingService buildingService,
         ITurnService turnService,
-        ISidePanelService sidePanelService)
+        ISidePanelService sidePanelService,
+        IInputManager inputManager)
     {
         _manilaGameCamera = manilaGameCamera;
         _gameData = gameData;
         _buildingService = buildingService;
         _turnService = turnService;
         _sidePanelService = sidePanelService;
+        _inputManager = inputManager;
     }
 
     public Vector2? GetTileCoordsAtCursor()
     {
-        var worldCoords = Raylib.GetScreenToWorld2D(Raylib.GetMousePosition(), _manilaGameCamera.Camera);
+        var worldCoords = _inputManager.GetMousePosition(_manilaGameCamera.Camera);
 
         if (worldCoords.X < 0 || worldCoords.Y < 0)
         {
@@ -44,12 +47,13 @@ internal class GameUserInteractionService : IGameUserInteractionService
 
     public bool TrySelectAtCurrentMousePosition()
     {
-        if (ActiveTile is not null && Raylib.IsKeyPressed(KeyboardKey.Escape))
+        if (ActiveTile is not null &&
+            _inputManager.HandleActionIfInvoked(ManilaConstants.Action_Escape))
         {
             ActiveTile = null;
         }
 
-        if (Raylib.IsMouseButtonPressed(MouseButton.Left))
+        if (_inputManager.HandleActionIfInvoked(ManilaConstants.Action_Click))
         {
             ActiveTile = null;
 
@@ -98,33 +102,37 @@ internal class GameUserInteractionService : IGameUserInteractionService
 
     public void Update()
     {
-        if (Raylib.IsKeyPressed(KeyboardKey.Escape))
+        HandleBuildingStuff();
+
+        if (_sidePanelService.ActiveSidePanel is not null &&
+            _inputManager.HandleActionIfInvoked(ManilaConstants.Action_Escape))
         {
             _sidePanelService.ClearPanel();
         }
+
         TrySelectAtCurrentMousePosition();
-        HandleBuildingStuff();
     }
 
     private void HandleBuildingStuff()
     {
-        if (_buildingService.IsBuildingModeActive && Raylib.IsKeyPressed(KeyboardKey.Escape))
+        if (_buildingService.IsBuildingModeActive &&
+            _inputManager.HandleActionIfInvoked(ManilaConstants.Action_Escape))
         {
             DeactivateBuildingMode();
             return;
         }
 
-        if (Raylib.IsKeyPressed(KeyboardKey.B))
+        if (!_buildingService.IsBuildingModeActive &&
+            _inputManager.HandleActionIfInvoked(ManilaConstants.Action_BuildMode))
         {
-            if (!_buildingService.IsBuildingModeActive)
-            {
-                ActivateBuildingMode();
-            }
+            ActivateBuildingMode();
         }
+
 
         if (_buildingService.IsBuildingModeActive)
         {
-            if (Raylib.IsMouseButtonPressed(MouseButton.Left) && GetTileCoordsAtCursor() is { } tileCoords)
+            if (_inputManager.HandleActionIfInvoked(ManilaConstants.Action_Click) &&
+                GetTileCoordsAtCursor() is { } tileCoords)
             {
                 var activeTeam = _turnService.GetCurrentTeamTurn();
                 var tile = _gameData.GetSafeTile((int)tileCoords.X, (int)tileCoords.Y);
@@ -134,6 +142,7 @@ internal class GameUserInteractionService : IGameUserInteractionService
                 {
                     if (_buildingService.PlaceActiveBuildingAtTile((int)tileCoords.X, (int)tileCoords.Y, activeTeam))
                     {
+                        ActiveTile = tileCoords;
                         DeactivateBuildingMode();
                     }
                 }

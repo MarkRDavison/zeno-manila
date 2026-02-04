@@ -1,9 +1,4 @@
-﻿using zeno.manila.game.core;
-using zeno.manila.game.core.Entities.Buildings;
-using zeno.manila.game.Prototype;
-using zeno.manilla.engine.Utility;
-
-namespace zeno.manilla.game.client;
+﻿namespace zeno.manilla.game.client;
 
 public class Worker<TStartScene> : BackgroundService
     where TStartScene : IScene
@@ -47,6 +42,50 @@ public class Worker<TStartScene> : BackgroundService
                 var filename = Path.GetFileNameWithoutExtension(path);
                 textureManager.LoadTexture(filename, path);
             }
+        }
+
+        {
+            var inputManager = scope.ServiceProvider.GetRequiredService<IInputManager>();
+
+            inputManager.RegisterAction(new()
+            {
+                Name = ManilaConstants.Action_Click_Start,
+                Type = InputActionType.MOUSE,
+                State = InputActionState.PRESS,
+                Button = MouseButton.Left
+            });
+
+            inputManager.RegisterAction(new()
+            {
+                Name = ManilaConstants.Action_Pan,
+                Type = InputActionType.MOUSE,
+                State = InputActionState.DOWN,
+                Button = MouseButton.Left
+            });
+
+            inputManager.RegisterAction(new()
+            {
+                Name = ManilaConstants.Action_Click,
+                Type = InputActionType.MOUSE,
+                State = InputActionState.RELEASE,
+                Button = MouseButton.Left
+            });
+
+            inputManager.RegisterAction(new()
+            {
+                Name = ManilaConstants.Action_Escape,
+                Type = InputActionType.KEYBOARD,
+                State = InputActionState.RELEASE,
+                Key = KeyboardKey.Escape
+            });
+
+            inputManager.RegisterAction(new()
+            {
+                Name = ManilaConstants.Action_BuildMode,
+                Type = InputActionType.KEYBOARD,
+                State = InputActionState.RELEASE,
+                Key = KeyboardKey.B
+            });
         }
 
         {

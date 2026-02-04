@@ -138,6 +138,8 @@ public sealed class ManilaGameRenderer
             yInfoOffset += 32;
             Raylib.DrawText(string.Format("Camera: {0:0},{1:0}", camera.Target.X, camera.Target.Y), 10, yInfoOffset, 32, Color.Black);
             yInfoOffset += 32;
+            Raylib.DrawText(string.Format("Zoom: {0}", camera.Zoom), 10, yInfoOffset, 32, Color.Black);
+            yInfoOffset += 32;
             Raylib.DrawText(string.Format("Mouse: {0:0},{1:0}", mouse.X, mouse.Y), 10, yInfoOffset, 32, Color.Black);
             yInfoOffset += 32;
             Raylib.DrawText(string.Format("World: {0:0},{1:0}", world.X, world.Y), 10, yInfoOffset, 32, Color.Black);

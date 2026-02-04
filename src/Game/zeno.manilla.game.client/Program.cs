@@ -13,6 +13,7 @@
             services
                 .AddHostedService<Worker<ManilaGameScene>>()
                 .AddEngine()
+                .AddGameCore()
                 .AddManilaCore();
         })
         .ConfigureLogging(logging =>

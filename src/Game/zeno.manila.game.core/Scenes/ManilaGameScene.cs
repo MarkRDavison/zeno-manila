@@ -7,6 +7,7 @@ public sealed class ManilaGameScene : IScene
     private readonly ManilaGameRenderer _gameRenderer;
     private readonly IGameUserInteractionService _gameUserInteractionService;
     private readonly ITurnService _turnService;
+    private readonly IInputManager _inputManager;
     private JsonSerializerOptions? _options;
 
     private int _autoTurnDelay = 30;
@@ -16,19 +17,24 @@ public sealed class ManilaGameScene : IScene
         ManilaGame game,
         ManilaGameRenderer gameRenderer,
         IGameUserInteractionService gameUserInteractionService,
-        ITurnService turnService)
+        ITurnService turnService,
+        IInputManager inputManager)
     {
         _camera = camera;
         _game = game;
         _gameRenderer = gameRenderer;
         _gameUserInteractionService = gameUserInteractionService;
         _turnService = turnService;
+        _inputManager = inputManager;
     }
 
     public void Init()
     {
         _camera.Offset = new Vector2(Raylib.GetScreenWidth() / 2, Raylib.GetScreenHeight() / 2);
-        _camera.Target = new Vector2();
+
+        // TEMP
+        _camera.Target = new Vector2(2800, 1500);
+        _camera.Zoom = 0.45f;
 
         const string Level = "StarterLevel";
 
@@ -84,6 +90,7 @@ public sealed class ManilaGameScene : IScene
 
         _game.Update(delta);
         _gameRenderer.Update(delta);
+        _inputManager.Update();
     }
 
 

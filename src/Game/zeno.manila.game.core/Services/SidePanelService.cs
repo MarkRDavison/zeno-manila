@@ -37,6 +37,15 @@ public sealed class SidePanelService : ISidePanelService
                 // TODO: Prototype id or something other than name
                 DisplayPanel(ManilaConstants.Panel_RelatedEntity, sprawl.RelatedEntity.Name ?? string.Empty);
                 _relatedEntitySidePanel.SetRelatedEntity(sprawl.RelatedEntity);
+                if (ActiveSidePanel is RelatedEntitySidePanel resp)
+                {
+                    resp.SetRelatedEntity(sprawl.RelatedEntity);
+                }
+                // TODO: Consolidate
+                if (ActiveSidePanel is IRelatedEntitySidePanel respi)
+                {
+                    respi.SetRelatedEntity(sprawl.RelatedEntity);
+                }
             }
         };
     }
