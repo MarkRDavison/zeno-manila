@@ -8,5 +8,8 @@ internal abstract class BaseRelatedEntitySidePanel : SidePanel, IRelatedEntitySi
     public void SetRelatedEntity(IEntity? relatedEntity)
     {
         RelatedEntity = relatedEntity;
+        OnRelatedEntitySet();
     }
+
+    protected virtual void OnRelatedEntitySet() { }
 }

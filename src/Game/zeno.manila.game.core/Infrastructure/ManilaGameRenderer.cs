@@ -9,6 +9,7 @@ public sealed class ManilaGameRenderer
     private readonly ITurnService _turnService;
     private readonly IBuildingService _buildingService;
     private readonly ISidePanelService _sidePanelService;
+    private readonly IPrototypeService<BuildingPrototype, Building> _buildingPrototypeService;
 
     public ManilaGameRenderer(
         ManilaGameData gameData,
@@ -16,7 +17,8 @@ public sealed class ManilaGameRenderer
         ITeamService teamService,
         ITurnService turnService,
         IBuildingService buildingService,
-        ISidePanelService sidePanelService)
+        ISidePanelService sidePanelService,
+        IPrototypeService<BuildingPrototype, Building> buildingPrototypeService)
     {
         _gameData = gameData;
         _userInteractionService = userInteractionService;
@@ -24,6 +26,7 @@ public sealed class ManilaGameRenderer
         _turnService = turnService;
         _buildingService = buildingService;
         _sidePanelService = sidePanelService;
+        _buildingPrototypeService = buildingPrototypeService;
 
         _buildingService.OnBuildingModeChanged += (s, e) =>
         {
@@ -178,7 +181,8 @@ public sealed class ManilaGameRenderer
                     if (sprawl is not null && sprawl.RelatedEntity is { } entity)
                     {
                         yInfoOffset += 32;
-                        Raylib.DrawText(string.Format("Related entity: {0}", entity.Name), 10, yInfoOffset, 32, Color.Black);
+                        var prototype = _buildingPrototypeService.GetPrototype(entity.PrototypeId);
+                        Raylib.DrawText(string.Format("Related entity: {0}", prototype.Name), 10, yInfoOffset, 32, Color.Black);
                     }
                 }
 
@@ -218,7 +222,8 @@ public sealed class ManilaGameRenderer
                 ManilaConstants.Resource_Materials,
                 ManilaConstants.Resource_Electronics,
                 ManilaConstants.Resource_Fuel,
-                ManilaConstants.Resource_Explosives
+                ManilaConstants.Resource_Explosives,
+                ManilaConstants.Resource_Manpower
             ];
 
             resources.ForEach(renderResource);

@@ -1,4 +1,6 @@
-﻿namespace zeno.manilla.game.client;
+﻿using zeno.manila.game.core.Entities.Military;
+
+namespace zeno.manilla.game.client;
 
 public class Worker<TStartScene> : BackgroundService
     where TStartScene : IScene
@@ -73,6 +75,14 @@ public class Worker<TStartScene> : BackgroundService
 
             inputManager.RegisterAction(new()
             {
+                Name = ManilaConstants.Action_Click_Context,
+                Type = InputActionType.MOUSE,
+                State = InputActionState.RELEASE,
+                Button = MouseButton.Right
+            });
+
+            inputManager.RegisterAction(new()
+            {
                 Name = ManilaConstants.Action_Escape,
                 Type = InputActionType.KEYBOARD,
                 State = InputActionState.RELEASE,
@@ -86,6 +96,37 @@ public class Worker<TStartScene> : BackgroundService
                 State = InputActionState.RELEASE,
                 Key = KeyboardKey.B
             });
+        }
+
+        {
+            var militaryUnitPrototypes = scope.ServiceProvider.GetRequiredService<IPrototypeService<MilitaryUnitPrototype, MilitaryUnit>>();
+
+            militaryUnitPrototypes.RegisterPrototype(
+                "AntiAirBattery",
+                new MilitaryUnitPrototype
+                {
+                    Id = StringHash.Hash("AntiAirBattery"),
+                    Name = "Anti Air Battery",
+                    Cost = {
+                        { ManilaConstants.Resource_Manpower, 100 },
+                        { ManilaConstants.Resource_Credits, 800 },
+                        { ManilaConstants.Resource_Electronics, 100 },
+                        { ManilaConstants.Resource_Explosives, 40 }
+                    }
+                });
+            militaryUnitPrototypes.RegisterPrototype(
+                "SpecOps",
+                new MilitaryUnitPrototype
+                {
+                    Id = StringHash.Hash("SpecOps"),
+                    Name = "Spec Ops",
+                    Cost = {
+                        { ManilaConstants.Resource_Manpower, 60 },
+                        { ManilaConstants.Resource_Credits, 600 },
+                        { ManilaConstants.Resource_Electronics, 10 },
+                        { ManilaConstants.Resource_Explosives, 4 }
+                    }
+                });
         }
 
         {
@@ -114,7 +155,8 @@ public class Worker<TStartScene> : BackgroundService
                     Cost = {
                         { ManilaConstants.Resource_Credits, 200 },
                         { ManilaConstants.Resource_Power, 20 },
-                    }
+                    },
+                    CanRecruit = ["SpecOps", "AntiAirBattery"]
                 });
             buildingPrototypes.RegisterPrototype(
                 "AirBase",
@@ -168,6 +210,11 @@ public class Worker<TStartScene> : BackgroundService
                         { ManilaConstants.Resource_Power, 20 }
                     }
                 });
+        }
+
+        {
+            // TODO: Prototype validation pass?
+            // Validate that CanRecruit names are valid???
         }
 
         var data = scope.ServiceProvider.GetRequiredService<ManilaGameData>();

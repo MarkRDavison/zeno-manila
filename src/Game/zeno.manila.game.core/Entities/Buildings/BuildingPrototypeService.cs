@@ -6,8 +6,7 @@ public sealed class BuildingPrototypeService : PrototypeService<BuildingPrototyp
     {
         return new Building
         {
-            PrototypeId = prototype.Id,
-            Name = prototype.Name
+            PrototypeId = prototype.Id
         };
     }
 }

@@ -14,7 +14,8 @@ public static class DependencyInjectionExtensions
             .AddScoped<IResourceProductionService, ResourceProductionService>();
 
         services
-            .AddScoped<IPrototypeService<BuildingPrototype, Building>, BuildingPrototypeService>();
+            .AddScoped<IPrototypeService<BuildingPrototype, Building>, BuildingPrototypeService>()
+            .AddScoped<IPrototypeService<MilitaryUnitPrototype, MilitaryUnit>, MilitaryUnitPrototypeService>();
 
         services
             .AddScoped<BuildingsSidePanel>()

@@ -10,6 +10,7 @@ public sealed class TeamInfo
         { ManilaConstants.Resource_Credits, 1000 },
         { ManilaConstants.Resource_Fuel, 200 },
         { ManilaConstants.Resource_Electronics, 200 },
-        { ManilaConstants.Resource_Materials, 200 }
+        { ManilaConstants.Resource_Materials, 200 },
+        { ManilaConstants.Resource_Manpower, 1000 }
     };
 }

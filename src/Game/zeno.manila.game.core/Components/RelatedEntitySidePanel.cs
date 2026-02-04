@@ -33,9 +33,9 @@ public class RelatedEntitySidePanel : SidePanel
             yOffset += size;
         }
 
-        drawAndOffset(_entity.Name ?? string.Empty, 32);
-
         var prototype = _buildingPrototypeService.GetPrototype(_entity.PrototypeId);
+
+        drawAndOffset(prototype.Name, 32);
 
         if (prototype.ActiveResources.Count is not 0)
         {

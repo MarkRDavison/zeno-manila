@@ -11,11 +11,13 @@ public sealed class ManilaGameData
 
     public List<City> Cities { get; } = [];
     public List<Building> Buildings { get; } = [];
+    public List<MilitaryUnit> MilitaryUnits { get; } = [];
 
     public WorldTile GetSafeTile(int x, int y)
     {
         return Tiles[y][x];
     }
+
     public WorldTile? GetTile(int x, int y)
     {
         if (x < 0 || y < 0 || x >= WorldWidth || y >= WorldHeight)

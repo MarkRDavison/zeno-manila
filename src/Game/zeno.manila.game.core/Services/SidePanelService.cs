@@ -7,6 +7,7 @@ public sealed class SidePanelService : ISidePanelService
     private readonly RelatedEntitySidePanel _relatedEntitySidePanel;
     private readonly ManilaGameData _manilaGameData;
     private readonly IBuildingService _buildingService;
+    private readonly IPrototypeService<BuildingPrototype, Building> _buildingPrototypeService;
 
     private readonly IList<IRelatedEntitySidePanel> _relatedEntitySidePanels;
 
@@ -15,12 +16,14 @@ public sealed class SidePanelService : ISidePanelService
         RelatedEntitySidePanel relatedEntitySidePanel,
         ManilaGameData manilaGameData,
         IBuildingService buildingService,
+        IPrototypeService<BuildingPrototype, Building> buildingPrototypeService,
         IEnumerable<IRelatedEntitySidePanel> relatedEntitySidePanels)
     {
         _buildingsSidePanel = buildingsSidePanel;
         _relatedEntitySidePanel = relatedEntitySidePanel;
         _manilaGameData = manilaGameData;
         _buildingService = buildingService;
+        _buildingPrototypeService = buildingPrototypeService;
         _relatedEntitySidePanels = [.. relatedEntitySidePanels];
 
         _buildingService.OnBuildingCreated += (s, e) =>
@@ -34,8 +37,10 @@ public sealed class SidePanelService : ISidePanelService
 
             if (sprawl?.RelatedEntity is not null)
             {
+                var buildingPrototype = _buildingPrototypeService.GetPrototype(sprawl.RelatedEntity.PrototypeId);
+
                 // TODO: Prototype id or something other than name
-                DisplayPanel(ManilaConstants.Panel_RelatedEntity, sprawl.RelatedEntity.Name ?? string.Empty);
+                DisplayPanel(ManilaConstants.Panel_RelatedEntity, buildingPrototype.Name);
                 _relatedEntitySidePanel.SetRelatedEntity(sprawl.RelatedEntity);
                 if (ActiveSidePanel is RelatedEntitySidePanel resp)
                 {

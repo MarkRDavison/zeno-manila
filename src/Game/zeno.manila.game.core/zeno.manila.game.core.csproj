@@ -10,8 +10,4 @@
     <ProjectReference Include="..\..\Core\zeno.manila.game\zeno.manila.game.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Entities\Military\" />
-  </ItemGroup>
-
 </Project>

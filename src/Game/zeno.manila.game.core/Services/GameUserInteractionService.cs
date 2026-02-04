@@ -8,6 +8,7 @@ internal class GameUserInteractionService : IGameUserInteractionService
     private readonly ITurnService _turnService;
     private readonly ISidePanelService _sidePanelService;
     private readonly IInputManager _inputManager;
+    private readonly IPrototypeService<BuildingPrototype, Building> _buildingPrototypeService;
 
     public GameUserInteractionService(
         ManilaGameCamera manilaGameCamera,
@@ -15,7 +16,8 @@ internal class GameUserInteractionService : IGameUserInteractionService
         IBuildingService buildingService,
         ITurnService turnService,
         ISidePanelService sidePanelService,
-        IInputManager inputManager)
+        IInputManager inputManager,
+        IPrototypeService<BuildingPrototype, Building> buildingPrototypeService)
     {
         _manilaGameCamera = manilaGameCamera;
         _gameData = gameData;
@@ -23,6 +25,7 @@ internal class GameUserInteractionService : IGameUserInteractionService
         _turnService = turnService;
         _sidePanelService = sidePanelService;
         _inputManager = inputManager;
+        _buildingPrototypeService = buildingPrototypeService;
     }
 
     public Vector2? GetTileCoordsAtCursor()
@@ -71,7 +74,8 @@ internal class GameUserInteractionService : IGameUserInteractionService
                     {
                         if (_sidePanelService.GetActivePanel() is ManilaConstants.Panel_RelatedEntity or null)
                         {
-                            _sidePanelService.DisplayPanel(ManilaConstants.Panel_RelatedEntity, entity.Name ?? string.Empty);
+                            var prototype = _buildingPrototypeService.GetPrototype(entity.PrototypeId);
+                            _sidePanelService.DisplayPanel(ManilaConstants.Panel_RelatedEntity, prototype.Name);
                             if (_sidePanelService.ActiveSidePanel is RelatedEntitySidePanel resp)
                             {
                                 resp.SetRelatedEntity(entity);
@@ -131,7 +135,7 @@ internal class GameUserInteractionService : IGameUserInteractionService
 
         if (_buildingService.IsBuildingModeActive)
         {
-            if (_inputManager.HandleActionIfInvoked(ManilaConstants.Action_Click) &&
+            if (_inputManager.IsActionInvoked(ManilaConstants.Action_Click) &&
                 GetTileCoordsAtCursor() is { } tileCoords)
             {
                 var activeTeam = _turnService.GetCurrentTeamTurn();
@@ -142,6 +146,7 @@ internal class GameUserInteractionService : IGameUserInteractionService
                 {
                     if (_buildingService.PlaceActiveBuildingAtTile((int)tileCoords.X, (int)tileCoords.Y, activeTeam))
                     {
+                        _inputManager.MarkActionAsHandled(ManilaConstants.Action_Click);
                         ActiveTile = tileCoords;
                         DeactivateBuildingMode();
                     }
