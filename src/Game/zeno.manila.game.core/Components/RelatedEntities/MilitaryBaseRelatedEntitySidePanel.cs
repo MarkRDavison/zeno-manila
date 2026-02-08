@@ -1,5 +1,4 @@
-﻿using zeno.manila.game.Components;
-using zeno.manilla.engine.Extensions;
+﻿using zeno.manilla.engine.Extensions;
 
 namespace zeno.manila.game.core.Components.RelatedEntities;
 
@@ -10,8 +9,6 @@ internal sealed class MilitaryBaseRelatedEntitySidePanel : BaseRelatedEntitySide
     private readonly IPrototypeService<BuildingPrototype, Building> _buildingPrototypeService;
     private readonly IInputManager _inputManager;
 
-    private readonly ButtonComponent _testButton;
-
     public MilitaryBaseRelatedEntitySidePanel(
         IPrototypeService<MilitaryUnitPrototype, MilitaryUnit> militaryUnitPrototypeService,
         IPrototypeService<BuildingPrototype, Building> buildingPrototypeService,
@@ -20,8 +17,6 @@ internal sealed class MilitaryBaseRelatedEntitySidePanel : BaseRelatedEntitySide
         _militaryUnitPrototypeService = militaryUnitPrototypeService;
         _buildingPrototypeService = buildingPrototypeService;
         _inputManager = inputManager;
-
-        _testButton = new ButtonComponent("Hello World!", inputManager);
     }
 
     public override string Metadata => "Military Base";
@@ -38,9 +33,6 @@ internal sealed class MilitaryBaseRelatedEntitySidePanel : BaseRelatedEntitySide
 
     protected override void UpdateContent(float delta)
     {
-        _testButton.Update();
-
-
         if (_inputManager.IsActionInvoked(ManilaConstants.Action_Click))
         {
             var screenWidth = Raylib.GetScreenWidth();
@@ -61,10 +53,6 @@ internal sealed class MilitaryBaseRelatedEntitySidePanel : BaseRelatedEntitySide
                 _inputManager.MarkActionAsHandled(ManilaConstants.Action_Click);
                 Console.WriteLine("{0}.Clicked within bounds", nameof(MilitaryBaseRelatedEntitySidePanel));
 
-                if (_testButton.WithinBounds)
-                {
-                    Console.WriteLine("TEST BUTTON CLICKED!!!");
-                }
             }
             else
             {
@@ -100,9 +88,5 @@ internal sealed class MilitaryBaseRelatedEntitySidePanel : BaseRelatedEntitySide
                 drawAndOffset($" - {n}", 24);
             }
         }
-
-        _testButton.SetPosition(xOffset, yOffset + 48);
-
-        _testButton.Draw();
     }
 }

@@ -5,6 +5,9 @@ public static class DependencyInjectionExtensions
     public static IServiceCollection AddManilaCore(this IServiceCollection services)
     {
         services
+            .AddUi<ManilaComponentState>();
+
+        services
             .AddScoped<IGameUserInteractionService, GameUserInteractionService>()
             .AddScoped<ITeamService, TeamService>()
             .AddScoped<ITurnService, TurnService>()

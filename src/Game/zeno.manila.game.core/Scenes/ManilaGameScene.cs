@@ -12,13 +12,16 @@ public sealed class ManilaGameScene : IScene
 
     private int _autoTurnDelay = 30;
 
+    private RootPanel? _rootPanel;
+
     public ManilaGameScene(
         ManilaGameCamera camera,
         ManilaGame game,
         ManilaGameRenderer gameRenderer,
         IGameUserInteractionService gameUserInteractionService,
         ITurnService turnService,
-        IInputManager inputManager)
+        IInputManager inputManager,
+        ComponentState componentState)
     {
         _camera = camera;
         _game = game;
@@ -26,6 +29,23 @@ public sealed class ManilaGameScene : IScene
         _gameUserInteractionService = gameUserInteractionService;
         _turnService = turnService;
         _inputManager = inputManager;
+
+        _rootPanel = new RootPanel(componentState);
+        _rootPanel.Children.Add(new Panel(componentState)
+        {
+            Children =
+            {
+                new ButtonComponent(componentState)
+                {
+                    Margin = 4,
+                    Padding = 4,
+                    TextSize = 32,
+                    Text = "Hello world!",
+                    X = 24,
+                    Y = 24
+                }
+            }
+        });
     }
 
     public void Init()
@@ -60,7 +80,11 @@ public sealed class ManilaGameScene : IScene
     public void Update(float delta)
     {
         // TODO: Update the UI here to prevent bubbling events etc
+        _rootPanel?.UpdateContainedBounds();
+        _rootPanel?.Update();
+
         _gameRenderer.Update(delta);
+
         _camera.Update(delta);
 
         _gameUserInteractionService.Update();
@@ -100,6 +124,10 @@ public sealed class ManilaGameScene : IScene
         Raylib.ClearBackground(Color.SkyBlue);
 
         _gameRenderer.Draw(_camera.Camera);
+        if (_rootPanel is not null)
+        {
+            _gameRenderer.DrawUi(_rootPanel);
+        }
 
         Raylib.DrawFPS(10, 10);
 

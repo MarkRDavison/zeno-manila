@@ -45,9 +45,13 @@ public sealed class ManilaGameRenderer
             _showDebug = !_showDebug;
         }
 
-        _sidePanelService.ActiveSidePanel?.Update(delta);
+        // _sidePanelService.ActiveSidePanel?.Update(delta);
     }
 
+    public void DrawUi(RootPanel root)
+    {
+        root.Draw();
+    }
     public void Draw(Camera2D camera)
     {
         const int TileSize = 64;
@@ -229,6 +233,6 @@ public sealed class ManilaGameRenderer
             resources.ForEach(renderResource);
         }
 
-        _sidePanelService.ActiveSidePanel?.Draw();
+        //  _sidePanelService.ActiveSidePanel?.Draw();
     }
 }

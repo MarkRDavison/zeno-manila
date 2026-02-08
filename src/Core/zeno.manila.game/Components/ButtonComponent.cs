@@ -1,83 +1,86 @@
 ﻿namespace zeno.manila.game.Components;
 
-public sealed class ButtonComponent
+public sealed class ButtonComponent : BaseComponent
 {
-    private string _text;
-    private const int _height = 24;
-    private const int _padding = 8;
-    private const int _border = 4;
-    private int _width;
+    private int _textSize = 24;
+    private string _text = string.Empty;
 
-    private int _x;
-    private int _y;
-
-    private bool _withinBounds;
-
-    private readonly IInputManager _inputManager;
-
-    public ButtonComponent(string text, IInputManager inputManager)
+    public ButtonComponent(ComponentState componentState) : base(componentState)
     {
-        SetText(text);
-        _text = text;
-        _inputManager = inputManager;
     }
 
-    public void SetText(string text)
+    private void SetText(string text)
     {
         _text = text;
-        _width = Raylib.MeasureText(_text, _height);
+        Height = _textSize + Border * 2 + Padding * 2;
+        Width = Raylib.MeasureText(_text, _textSize) + Border * 2 + Padding * 2;
     }
 
-    public void SetPosition(int x, int y)
+    public int TextSize
     {
-        _x = x;
-        _y = y;
+        get => _textSize;
+        set => _textSize = value;
+    }
+    public string Text
+    {
+        get => _text;
+        set => SetText(value);
     }
 
-    public void Update()
+    public int Border { get; set; } = 4;
+
+    public override void Update()
     {
-        var pos = _inputManager.GetMousePosition();
-
-        _withinBounds = false;
-
-        if (_x <= pos.X && pos.X <= _x + TotalWidth &&
-            _y <= pos.Y && pos.Y <= _y + TotalHeight)
+        if (Raylib.IsMouseButtonPressed(MouseButton.Middle))
         {
-            _withinBounds = true;
+            var mouse = ComponentState.InputManager.GetMousePosition();
+            Console.WriteLine("====================================");
+            Console.WriteLine("Mouse {0:0}, {1:0}", mouse.X, mouse.Y);
+            Console.WriteLine("Pos {0:0}, {1:0}", X, Y);
+            Console.WriteLine("Size {0:0}, {1:0}", Width, Height);
+            if (Bounds.Contains(ComponentState.InputManager.GetMousePosition()))
+            {
+                Console.WriteLine("WITHIN BUTTON BOUNDS");
+            }
+            else
+            {
+                Console.WriteLine("OUTSIDE BUTTON BOUNDS");
+            }
         }
     }
 
-    private int TotalWidth => _width + 2 * _padding + 2 * _border;
-    private int TotalHeight => _height + 2 * _padding + 2 * _border;
-
-    public bool WithinBounds => _withinBounds;
-    public void Draw()
+    protected override void Rearrange()
     {
-        int xPos = _x;
-        int yPos = _y;
+
+    }
+
+    public override void Draw()
+    {
+        int xPos = X + Margin;
+        int yPos = Y + Margin;
 
         Raylib.DrawRectangle(
             xPos,
             yPos,
-            _border * 2 + _padding * 2 + _width,
-            _border * 2 + _padding * 2 + _height,
+            Width,
+            Height,
             Color.DarkGray);
 
-        xPos += _border;
-        yPos += _border;
+        xPos += Border;
+        yPos += Border;
 
         Raylib.DrawRectangle(
             xPos,
             yPos,
-            _padding * 2 + _width,
-            _padding * 2 + _height,
+            Width - Border * 2,
+            Height - Border * 2,
             Color.LightGray);
 
-        xPos += _padding;
-        yPos += _padding;
+        xPos += Padding;
+        yPos += Padding;
 
-        var col = _withinBounds ? Color.Yellow : Color.Black;
+        var col = WithinBounds ? Color.Yellow : Color.Black;
 
-        Raylib.DrawText(_text, xPos, yPos, _height, col);
+        Raylib.DrawText(_text, xPos, yPos, TextSize, col);
     }
 }

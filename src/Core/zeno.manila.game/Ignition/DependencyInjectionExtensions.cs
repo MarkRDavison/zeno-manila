@@ -9,4 +9,12 @@ public static class DependencyInjectionExtensions
 
         return services;
     }
+    public static IServiceCollection AddUi<TComponentState>(this IServiceCollection services)
+        where TComponentState : ComponentState
+    {
+        services
+            .AddScoped<ComponentState, TComponentState>();
+
+        return services;
+    }
 }
